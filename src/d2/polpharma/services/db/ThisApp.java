@@ -25,13 +25,14 @@ public class ThisApp extends ServiceApp {
 
 
 	@Override protected MonitorService initMonitorService() {
-		return new TelegramMonitorService() {
+		return null; /*new TelegramMonitorService() {
 			@Override protected String getTelegramToken() 	{ return polpharmaMonitorTelegramToken; }
 			@Override public String getHost() 				{ return polpharmaMonitorHost; 			}
 			@Override public String getMonitorKey() 		{ return polpharmaMonitorKey; 			}
 			@Override public String getDomainName() throws NotSupported { throw NOT_SUPPORTED; }
 			@Override public String getCertEmail() throws NotSupported { throw NOT_SUPPORTED; }
 		};
+		*/
 	}
 
 	@Override protected Object getStatus() { return null; }

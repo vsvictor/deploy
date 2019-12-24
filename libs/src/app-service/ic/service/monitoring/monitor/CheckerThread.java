@@ -35,7 +35,7 @@ public abstract class CheckerThread extends Thread {
 		loop(() -> {
 
 			if (toStop()) throw BREAK;
-
+			sleep(1000L * 60 * 10);
 			getMonitoredServices().forEach(monitoredService -> {
 
 				try {
@@ -122,8 +122,6 @@ public abstract class CheckerThread extends Thread {
 			});
 
 			if (toStop()) throw BREAK;
-
-			sleep(1000L * 60 * 10);
 
 		});
 
