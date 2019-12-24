@@ -123,7 +123,7 @@ public abstract class CheckerThread extends Thread {
 
 			if (toStop()) throw BREAK;
 
-			sleep(1000L * 60 * 4);
+			sleep(1000L * 60 * 10);
 
 		});
 
