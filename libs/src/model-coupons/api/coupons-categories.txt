@@ -1,0 +1,80 @@
+// Coupons categories:
+
+
+// List coupons categories:
+
+GET <route>/list
+
+RESPONSE: {
+	status: SUCCESS,
+	coupons: [
+		{
+			id: '...',
+			name: '...', 			// Optional
+			imageUrl: '...', 		// Optional
+			price: 22				// Optional
+			addedCount: 23
+		},
+		...
+	]
+}
+
+
+// Create coupons category:
+
+POST <route>/create
+
+REQUEST: {
+	name: '...', 			// Optional
+	imageUrl: '...', 		// Optional
+	price: 22				// Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	id: '...'
+}
+
+
+// Get coupons category:
+
+POST <route>/get
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	name: '...', 			// Optional
+	imageUrl: '...', 		// Optional
+	price: 22				// Optional
+}
+
+
+// Modify coupons category:
+
+POST <route>/modify
+
+REQUEST: {
+	id: '...',
+	name: '...', 			// Optional
+	imageUrl: '...', 		// Optional
+	price: 22				// Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// Delete coupons category:
+
+POST <route>/delete
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}

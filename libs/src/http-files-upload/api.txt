@@ -1,0 +1,61 @@
+// Upload file:
+
+POST <route>/upload?ext=<file_extension>
+
+REQUEST: <binary>
+
+RESPONSE: {
+	status: SUCCESS,
+	fileName: '...'
+}
+
+
+// Upload file via Base64:
+
+POST <route>/upload-base64
+
+REQUEST: {
+	ext:     '<file_extension>',
+	content: '<base64>'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	fileName: '...'
+}
+
+
+// Load file from url:
+
+POST <route>/load
+
+REQUEST: {
+	url: '...',
+	ext: '<file_extension>'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	fileName: '...'
+}
+
+
+// Download file:
+
+GET <route>/download/<file_name>
+
+RESPONSE: <binary>
+
+
+// Get Base64:
+
+POST <route>/get-base64:
+
+REQUEST: {
+	fileName: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	content: '<base64>'
+}

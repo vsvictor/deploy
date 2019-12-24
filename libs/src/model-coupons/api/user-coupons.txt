@@ -1,0 +1,53 @@
+// User coupons:
+
+
+// List user coupons:
+
+POST <route>/list
+
+REQUEST: {
+	userId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	userCoupons: [
+		{
+			id: '...',
+			isUsed: true | false
+			categoryId: '...',		// Optional
+			code: '...', 			// Optional
+			codeImageUrl: '...', 	// Optional
+		},
+		...
+	]
+}
+
+
+// Add user coupon:
+
+POST <route>/add
+
+REQUEST: {
+	userId: '...',
+	couponId: '...',
+	maxCouponAddedCount: 23 // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | ALREADY_EXISTS | COUPON_NOT_EXISTS | MAX_COUPON_ADDED_COUNT_EXCEEDED
+}
+
+
+// Use coupon:
+
+POST <route>/use
+
+REQUEST: {
+	userId: '...',
+	couponId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | USER_COUPON_NOT_EXISTS | ALREADY_USED
+}

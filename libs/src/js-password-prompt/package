@@ -1,0 +1,8 @@
+{ class: 'ic.Package',
+    
+    dependencies: [
+        'js-import',
+        'js-local-storage'
+    ]
+    
+}

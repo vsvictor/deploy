@@ -1,0 +1,17 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		app,
+		ic,
+		sudo,
+		system-services,
+		icotp-client,
+		icotp-server,
+		https-server,
+		storage-cache,
+		onboot,
+		log,
+		ssh
+	]
+
+}

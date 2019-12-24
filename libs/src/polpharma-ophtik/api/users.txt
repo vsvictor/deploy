@@ -1,0 +1,75 @@
+POST https://db.ophtik.com.ua/user/create
+
+REQUEST: {
+	role: '...',
+	isAdmin: true|false, // Optional
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	birthDate: 23456, // Millis, Optional
+	city: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	id: '...'
+}
+
+
+POST https://db.ophtik.com.ua/user/get
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	role: '...',
+	isAdmin: true|false,
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	birthDate: 23456, // Millis, Optional
+	city: '...' // Optional
+	registrationDate: 23456, // Millis
+}
+
+
+POST https://db.ophtik.com.ua/user/modify
+
+REQUEST: {
+	id: '...',
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	birthDate: 23456, // Millis, Optional
+	city: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+POST https://db.ophtik.com.ua/user/list
+
+REQUEST: {
+	role: '...', // Optional
+	isAdmin: true|false, // Optional
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	city: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+GET https://db.ophtik.com.ua/user/count
+
+RESPONSE: {
+	status: SUCCESS
+	usersCount: 246
+}

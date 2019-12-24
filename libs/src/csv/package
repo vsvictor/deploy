@@ -1,0 +1,12 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		core,
+		'json'
+	],
+
+	jarDependencies: [
+		'http://central.maven.org/maven2/com/opencsv/opencsv/3.3/opencsv-3.3.jar'
+	]
+
+}

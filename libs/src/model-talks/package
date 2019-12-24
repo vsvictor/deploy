@@ -1,0 +1,30 @@
+{ class: 'ic.Package',
+
+	stores: [
+
+    	{ name: 'd2-backend',
+    		url: 'https://bitbucket.org/d2-backend'
+    	},
+
+    	{ name: 'lazy-team',
+    		url: 'https://gitlab.com/lazy-team'
+    	}
+
+    ],
+
+	dependencies: [
+		'mapper-storage',
+		'storage-cache',
+		'http-server',
+		'http-storage',
+		http-endpoint-protected,
+		'css-ic',
+        'js-url-params',
+        'js-http-client',
+        'js-file-input-button',
+		'js-popup',
+		'csv',
+		'date'
+	]
+
+}

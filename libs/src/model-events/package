@@ -1,0 +1,18 @@
+{ class: ic.Package,
+
+	stores: [
+		{ name: lazy-team,
+			url: 'https://gitlab.com/lazy-team'
+		}
+	],
+
+	dependencies: [
+		mapper-storage,
+		serial-string-map,
+		date,
+		http-endpoint-protected,
+		model-docs-api,
+		storage-db
+	]
+
+}

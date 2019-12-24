@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title>Images Adminka</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="css/core.css">
+<link rel="stylesheet" type="text/css" href="css/ic.css">
+
+<script src="js/import.js"	></script>
+
+<body>
+
+	<div id="upload-button"></div>
+
+	<div style="height: 8px"></div>
+
+	<div id="images-container"></div>
+
+</body>
+
+<script defer>
+
+	let space;
+
+	let imagesContainer = document.getElementById('images-container');
+	imagesContainer.style.padding 		= '8px';
+	imagesContainer.style.background 	= '#E0E0E0';
+
+	importJs(
+
+		[
+			'js/http-client-password.js',
+			'js/file-input-button.js',
+			'js/name-format.js'
+		],
+
+		function() {
+
+			createFileInputButton(
+				document.getElementById('upload-button'),
+				function() {
+					let button = document.createElement('button');
+					button.innerHTML = "UPLOAD";
+					return button;
+				},
+				'BINARY',
+				function(file) {
+					let imageName;
+					while (true) {
+						imageName = prompt("Enter image name");
+						if (!imageName) return;
+						try {
+							validateFileName(imageName);
+							break;
+						} catch (error) { alert(error); }
+					}
+					imageName += '.png';
+					httpRequestWithPassword(
+						'api/upload-image?name=' + imageName,
+						'POST',
+						file,
+						function(response) {
+							if (response.status == 'SUCCESS') {
+								location.reload();
+							} else {
+								alert(response);
+							}
+						}
+					);
+				}
+			);
+
+			httpRequestWithPassword(
+				'api/get-image-names', 'GET',
+				null,
+				function(response) {
+					let imageNames = response.imageNames;
+					for (let i = 0; i < imageNames.length; i++) { let imageName = imageNames[i];
+
+						let itemElement = document.createElement('div');
+						itemElement.className = 'elevated';
+						itemElement.style.display 		= 'inline-block';
+						itemElement.style.padding 		= '4px'
+						itemElement.style.margin 		= '8px'
+						itemElement.style.background 	= '#FFFFFF';
+
+							let toolsRow = document.createElement('div');
+							toolsRow.style.width 	= '100%';
+							toolsRow.style.height 	= '24px';
+
+								let deleteButton = document.createElement('img');
+								deleteButton.className = 'button';
+								deleteButton.style.width = '24px';
+								deleteButton.style.height = '24px';
+								deleteButton.src = 'icons/delete-forever.png';
+								deleteButton.onclick = function() {
+
+									httpRequestWithPassword(
+										'api/delete-image?name=' + imageName, 'POST',
+										null,
+										function(response) {
+											if (response.status == 'SUCCESS') {
+												location.reload();
+											} else {
+												alert(response);
+											}
+										}
+									);
+
+								};
+								toolsRow.appendChild(deleteButton);
+
+							itemElement.appendChild(toolsRow);
+
+							space = document.createElement('div');
+							space.style.width 	= '100%';
+							space.style.height 	= '4px';
+							itemElement.appendChild(space);
+
+							let imageContainer = document.createElement('div');
+							imageContainer.style.width 		= '96px';
+							imageContainer.style.height 	= '96px';
+							imageContainer.style.background = '#F0F0F0';
+
+								let imageElement = document.createElement('img');
+								imageElement.className = 'centered';
+								imageElement.style.maxWidth 	= '100%';
+								imageElement.style.maxHeight 	= '100%';
+								imageElement.style.width 		= 'auto';
+								imageElement.style.height 		= 'auto';
+								imageElement.src = imageName;
+								imageContainer.appendChild(imageElement);
+
+							itemElement.appendChild(imageContainer);
+
+							space = document.createElement('div');
+							space.style.width 	= '100%';
+							space.style.height 	= '4px';
+							itemElement.appendChild(space);
+
+							let imageNameRow = document.createElement('div');
+							imageNameRow.style.width 	= '100%';
+							imageNameRow.style.height 	= '24px';
+
+								let imageNameElement = document.createElement('div');
+								imageNameElement.className = 'centered';
+								imageNameElement.style.fontSize = '14px';
+								imageNameElement.innerHTML = imageName;
+								imageNameRow.appendChild(imageNameElement);
+
+							itemElement.appendChild(imageNameRow);
+
+						imagesContainer.appendChild(itemElement);
+
+					}
+				}
+			);
+
+		}
+
+	);
+
+</script>
+
+</html>

@@ -1,0 +1,53 @@
+// Points
+
+
+// Get user points:
+
+POST <route>/get
+
+REQUEST: {
+	userId: '...'
+}
+
+RESPONSE: {
+	points: 42
+}
+
+
+// Add (or subtract) points:
+
+POST <route>/add
+
+REQUEST: {
+	userId: '...',
+	points: 42,
+	creditLimit: 22 // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_ENOUGH
+}
+
+
+// Points distribution by users:
+
+POST <route>/distribution
+
+REQUEST: {
+	mode: LINEAR | LOGARITHMIC | SYMMETRIC_LOG
+	min: -12345,
+	max: 12345
+	step: 100
+}
+
+RESPONSE: {
+	status: SUCCESS
+	groups: [
+		{
+			start: 0,
+			end: 100,
+			count 243453
+		},
+		...
+	]
+}

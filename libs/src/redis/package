@@ -1,0 +1,11 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'storage-string-map'
+	],
+
+	jarDependencies: [
+		'http://central.maven.org/maven2/redis/clients/jedis/2.9.0/jedis-2.9.0.jar'
+	]
+
+}

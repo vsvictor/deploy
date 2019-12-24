@@ -1,0 +1,6 @@
+{
+	id: '...',
+	categoryId: '...',	// Optional
+	code: '...', 		// Optional
+	codeImageUrl: '...' // Optional
+}

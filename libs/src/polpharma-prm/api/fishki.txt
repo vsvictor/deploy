@@ -1,0 +1,8 @@
+POST <host>/events/notify_fishki
+
+REQUEST: {
+	userId: '...',
+	pointsAmount: 213,
+	fishkiAmount: 213,
+	pointsRemaining: 333
+}

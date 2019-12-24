@@ -1,0 +1,4 @@
+{
+	status: 'SUCCESS'|'ALREADY_ANSWERED'|'NO_RIGHTS_TO_ANSWER',
+	questionId: '...'
+}

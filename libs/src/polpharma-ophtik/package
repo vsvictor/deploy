@@ -1,0 +1,19 @@
+{ class: ic.Package,
+
+	dependencies: [
+		app-service,
+		mongodb-local,
+		mapper-storage,
+		http-endpoint-protected,
+		polpharma-backend,
+		service-monitor-telegram,
+		model-scenarios,
+		model-events,
+		model-achievements,
+		model-counter,
+		model-questions
+	],
+
+	main: d2.polpharma.services.ophtik.OphtikServiceApp
+
+}

@@ -1,0 +1,11 @@
+{ class: ic.Package,
+
+	dependencies: [
+		core
+	],
+
+	jarDependencies: [
+		'http://central.maven.org/maven2/com/itextpdf/itextpdf/5.5.13/itextpdf-5.5.13.jar'
+	]
+
+}

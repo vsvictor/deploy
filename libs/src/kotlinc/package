@@ -1,0 +1,10 @@
+{ class: ic.Package,
+
+	dependencies: [
+		storage-ic,
+		console-system,
+		sudo,
+		compiler
+	]
+
+}

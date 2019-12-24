@@ -1,0 +1,12 @@
+{
+	status: SUCCESS,
+	coupons: [
+		{
+			id: '...',
+			name: '...', 		// Optional
+			imageUrl: '...', 	// Optional
+			price: 22 			// Optional
+		},
+		...
+	]
+}

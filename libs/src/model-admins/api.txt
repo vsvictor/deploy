@@ -1,0 +1,80 @@
+// Create admin:
+
+POST <route>/create
+
+REQUEST: {
+	username: '...',
+	password: '...',
+	profile: { ... } // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | ALREADY_EXISTS
+}
+
+
+// Delete admin:
+
+POST <route>/delete
+
+REQUEST: {
+	username: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// Set admin password:
+
+POST <route>/set-password
+
+REQUEST: {
+	username: '...',
+	password: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS | ACCESS_DENIED
+}
+
+
+// Login:
+
+GET <route>/me
+
+RESPONSE: {
+	status: SUPERADMIN | ADMIN,
+	profile: { ... }
+}
+
+
+// List admins:
+
+GET <route>/list
+
+RESPONSE: {
+	status: SUCCESS,
+	admins: [
+		{
+			username: '...',
+			profile: { ... }
+		},
+		...
+	]
+}
+
+
+// Modify profile:
+
+POST <route>/modify-profile
+
+REQUEST: {
+	username: '...',
+	profile: { ... }
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}

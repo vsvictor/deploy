@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Scenario admin panel</title>
+	<link rel="stylesheet" type="text/css" href="/css/core.css">
+	<link rel="stylesheet" type="text/css" href="/css/ic.css">
+	<script src="js/import.js"></script>
+</head>
+<body>
+	<div id="blocks-container"></div>
+	<div id="append-block-button-container"></div>
+	<button id="save-button">СОХРАНИТЬ</button>
+</body>
+<script defer>
+
+	var blocksContainer 			= document.getElementById('blocks-container');
+	var saveButton 					= document.getElementById('save-button');
+	var appendBlockButtonContainer 	= document.getElementById('append-block-button-container');
+
+	var createSelector = function() {
+		let selector = document.createElement('div');
+		selector.setValues = function(values) {
+			selector.innerHTML = '';
+			selector.style.height = (28 * values.length - 4) + 'px';
+			for (let i = 0; i < values.length; i++) {
+				let button = document.createElement('button');
+				button.style.position = 'absolute';
+				button.style.left = '0px';
+				button.style.top = (28 * i) + 'px';
+				button.style.top = 'absolute';
+				button.style.width = '100%';
+				button.style.height = '24px';
+				button.innerHTML = values[i];
+				button.onclick = function() {
+					selector.selectValue(values[i]);
+				};
+				selector.appendChild(button);
+			}
+			selector.values = values;
+			if (values.includes(selector.selectedValue)) {
+				selector.selectValue(selector.selectedValue);
+			} else {
+				selector.selectValue(values[0]);
+			}
+		}
+		selector.selectValue = function(selectedValue) {
+			this.selectedValue = selectedValue;
+			for (let i = 0; i < selector.values.length; i++) {
+				this.childNodes[i].style.background = selector.values[i] == selectedValue ? '#80C0FF' : '#FFFFFF';
+			}
+			if (this.onValueSelected) this.onValueSelected(selectedValue);
+		};
+		return selector;
+	};
+
+	importJs(
+		[
+			'js/url-params.js',
+			'js/http-client-password.js',
+			'js/file-input-button.js',
+			'js/name-format.js'
+		],
+		function() {
+
+			let urlParams = getUrlParams();
+			let subjectId 	= urlParams['subject_id'];
+			let scenarioId 	= urlParams['scenario_id'];
+
+			let addBlockElement = function(block, before) {
+
+				let blockElement = document.createElement('div');
+				blockElement.style.width 	= '928px';
+				blockElement.style.height 	= '220px';
+				blockElement.appendChild(createAddBlockButton(blockElement));
+
+				let blockRowElement = document.createElement('div');
+				blockRowElement.style.position 	= 'absolute';
+				blockRowElement.style.left 		= '0px';
+				blockRowElement.style.top 		= '24px';
+				blockRowElement.style.width 	= '928px';
+				blockRowElement.style.height 	= '24px';
+
+				let removeBlockButton = document.createElement('img');
+				removeBlockButton.className = 'button';
+				removeBlockButton.style.position 	= 'absolute';
+				removeBlockButton.style.left 		= '0px';
+				removeBlockButton.style.top 		= '84px';
+				removeBlockButton.style.width 		= '24px';
+				removeBlockButton.style.height 		= '24px';
+				removeBlockButton.src = 'icons/delete.png';
+				removeBlockButton.onclick = function() {
+					blockElement.remove();
+				};
+				blockRowElement.appendChild(removeBlockButton);
+
+				let blockBody = document.createElement('div');
+				blockBody.className = 'elevated';
+				blockBody.style.position 	= 'absolute';
+				blockBody.style.left 		= '28px';
+				blockBody.style.top 		= '-10px';
+				blockBody.style.width 		= '900px';
+				blockBody.style.height 		= '216px';
+
+				let x = 0;
+
+				let idGroup = document.createElement('div');
+				idGroup.style.position 	= 'absolute';
+				idGroup.style.left 		= x + 'px';
+				idGroup.style.top 		= '0px';
+				idGroup.style.width 	= '100px'; x += 100;
+				idGroup.style.height 	= '216px';
+				let idLabel = document.createElement('div');
+				idLabel.style.position 	= 'absolute';
+				idLabel.style.left 		= '4px';
+				idLabel.style.top 		= '4px';
+				idLabel.style.width 	= '64px';
+				idLabel.style.height 	= '14px';
+				idLabel.style.fontSize 	= '12px';
+				idLabel.style.color 	= '#808080';
+				idLabel.innerHTML = "id:";
+				idGroup.appendChild(idLabel);
+				let idInput = document.createElement('input');
+				idInput.style.position 	= 'absolute';
+				idInput.style.left 		= '4px';
+				idInput.style.top 		= '20px';
+				idInput.style.width 	= '96px';
+				if (block.id) idInput.value = block.id;
+				idGroup.appendChild(idInput);
+				blockBody.appendChild(idGroup);
+
+				let typeGroup = document.createElement('div');
+				typeGroup.style.position 	= 'absolute';
+				typeGroup.style.left 		= x + 'px';
+				typeGroup.style.top 		= '0px';
+				typeGroup.style.width 		= '68px'; x += 68;
+				typeGroup.style.height 		= '216px';
+				let typeLabel = document.createElement('div');
+				typeLabel.style.position 	= 'absolute';
+				typeLabel.style.left 		= '4px';
+				typeLabel.style.top 		= '4px';
+				typeLabel.style.width 		= '64px';
+				typeLabel.style.height 		= '14px';
+				typeLabel.style.fontSize 	= '12px';
+				typeLabel.style.color 		= '#808080';
+				typeLabel.innerHTML = "Тип:";
+				typeGroup.appendChild(typeLabel);
+				let typeSelector = createSelector();
+				typeSelector.style.position = 'absolute';
+				typeSelector.style.left 	= '4px';
+				typeSelector.style.top 		= '20px';
+				typeSelector.style.width 	= '64px';
+				typeSelector.setValues([ 'TEXT', 'IMAGE', 'VIDEO', 'FINISH' ]);
+				typeSelector.selectValue(block.type);
+				typeGroup.appendChild(typeSelector);
+				blockBody.appendChild(typeGroup);
+
+				let contentGroup = document.createElement('div');
+				contentGroup.style.position = 'absolute';
+				contentGroup.style.left 	= x + 'px';
+				contentGroup.style.top 		= '0px';
+				contentGroup.style.width 	= '260px'; x += 260;
+				contentGroup.style.height 	= '216px';
+				let contentLabel = document.createElement('div');
+				contentLabel.style.position = 'absolute';
+				contentLabel.style.left 	= '4px';
+				contentLabel.style.top 		= '4px';
+				contentLabel.style.width 	= '256px';
+				contentLabel.style.height 	= '14px';
+				contentLabel.style.fontSize = '12px';
+				contentLabel.style.color 	= '#808080';
+				contentLabel.innerHTML = "Контент:";
+				contentGroup.appendChild(contentLabel);
+
+				let contentContainer = document.createElement('div');
+				contentContainer.style.position = 'absolute';
+				contentContainer.style.left 	= '4px';
+				contentContainer.style.top 		= '20px';
+				contentContainer.style.width 	= '256px';
+				contentContainer.style.height 	= '164px';
+				contentGroup.appendChild(contentContainer);
+
+				blockBody.appendChild(contentGroup);
+
+				let keyboardGroup = document.createElement('div');
+				keyboardGroup.style.position 	= 'absolute';
+				keyboardGroup.style.left 		= x + 'px';
+				keyboardGroup.style.top 		= '0px';
+				keyboardGroup.style.width 		= '68px'; x += 68;
+				keyboardGroup.style.height 		= '44px';
+				let keyboardLabel = document.createElement('div');
+				keyboardLabel.style.position 	= 'absolute';
+				keyboardLabel.style.left 		= '4px';
+				keyboardLabel.style.top 		= '4px';
+				keyboardLabel.style.width 		= '64px';
+				keyboardLabel.style.height 		= '14px';
+				keyboardLabel.style.fontSize 	= '12px';
+				keyboardLabel.style.color 		= '#808080';
+				keyboardLabel.innerHTML = "Кнопки:";
+				keyboardGroup.appendChild(keyboardLabel);
+				let keyboardSelector = createSelector();
+				keyboardSelector.style.position = 'absolute';
+				keyboardSelector.style.left 	= '4px';
+				keyboardSelector.style.top 		= '20px';
+				keyboardSelector.style.width 	= '64px';
+				keyboardGroup.appendChild(keyboardSelector);
+				blockBody.appendChild(keyboardGroup);
+
+				let waysContainer = document.createElement('div');
+				waysContainer.style.position 	= 'absolute';
+				waysContainer.style.left 		= x + 'px';
+				waysContainer.style.top 		= '0px';
+				waysContainer.style.width 		= 272 + 'px'; x += 272;
+
+				let onTypeSelected = function(type) {
+
+					contentContainer.innerHTML = '';
+
+					contentContainer.getValue = function() { return ''; };
+
+					if (type == 'TEXT') {
+
+						let contentInput = document.createElement('textarea');
+						contentInput.style.position = 'absolute';
+						contentInput.style.left 	= '0px';
+						contentInput.style.top 		= '0px';
+						contentInput.style.width 	= '256px';
+						contentInput.style.height 	= '192px';
+						if (block.type == type && block.content) contentInput.value = block.content;
+						contentContainer.appendChild(contentInput);
+
+						contentContainer.getValue = function() { return contentInput.value; };
+
+					} else
+
+					if (type == 'IMAGE') {
+
+						let linkInput = document.createElement('input');
+						linkInput.style.position = 'absolute';
+						linkInput.style.left 	= '0px';
+						linkInput.style.top 	= '0px';
+						linkInput.style.width 	= '256px';
+						linkInput.placeholder = 'Ссылка';
+						if (block.type == type && block.content) linkInput.value = block.content;
+						contentContainer.appendChild(linkInput);
+
+						let imagePlaceholder = document.createElement('div');
+						imagePlaceholder.style.position = 'absolute';
+						imagePlaceholder.style.left 	= '0px';
+						imagePlaceholder.style.top 		= '28px';
+						imagePlaceholder.style.width 	= '164px';
+						imagePlaceholder.style.height 	= '164px';
+						imagePlaceholder.style.background = '#E0E0E0';
+						contentContainer.appendChild(imagePlaceholder);
+
+						let imageElement = document.createElement('div');
+						imageElement.style.position = 'absolute';
+						imageElement.style.left 	= '0px';
+						imageElement.style.top 		= '28px';
+						imageElement.style.width 	= '164px';
+						imageElement.style.height 	= '164px';
+						let onLinkChanged = function(newLink) {
+							imageElement.style.backgroundImage 		= 'url(' + newLink + ')';
+							imageElement.style.backgroundRepeat 	= 'no-repeat';
+							imageElement.style.backgroundSize 		= 'contain';
+							imageElement.style.backgroundPosition 	= 'center';
+						};
+						linkInput.oninput = function() {
+							onLinkChanged(linkInput.value);
+						}
+						onLinkChanged(linkInput.value);
+						contentContainer.appendChild(imageElement);
+
+						let fileInputContainer = document.createElement('div');
+						fileInputContainer.style.position = 'absolute';
+						fileInputContainer.style.left 	= '168px';
+						fileInputContainer.style.top 	= '28px';
+						fileInputContainer.style.width 	= '88px';
+						createFileInputButton(
+							fileInputContainer,
+							function() {
+								let button = document.createElement('button');
+								button.style.width = '100%';
+								button.innerHTML = "ЗАГРУЗИТЬ";
+								return button;
+							},
+							'BINARY',
+							function(file) {
+								let imageName;
+								while (true) {
+									imageName = prompt("Введите имя картинки");
+									if (!imageName) return;
+									try {
+										validateFileName(imageName);
+										break;
+									} catch (error) { alert(error); }
+								}
+								httpRequestWithPassword(
+									'api/upload_image?name=' + encodeURIComponent(imageName), 'POST',
+									file,
+									function(response) {
+										linkInput.value = response.url;
+										alert("Готово!");
+										onLinkChanged(response.url);
+									}
+								);
+							}
+						);
+						contentContainer.appendChild(fileInputContainer);
+
+						let selectImageButton = document.createElement('button');
+						selectImageButton.style.position = 'absolute';
+						selectImageButton.style.left 	= '168px';
+						selectImageButton.style.top 	= '56px';
+						selectImageButton.style.width 	= '88px';
+						selectImageButton.innerHTML = "ВЫБРАТЬ";
+						selectImageButton.onclick = function() {
+							httpRequestWithPassword(
+								'api/get_images_page_url', 'GET', null,
+								function(response) {
+									window.open(response.imagesPageUrl);
+								}
+							);
+						};
+						contentContainer.appendChild(selectImageButton);
+
+						contentContainer.getValue = function() { return linkInput.value; };
+
+					} else
+
+					if (type == 'VIDEO') {
+
+						let linkInput = document.createElement('input');
+						linkInput.style.position = 'absolute';
+						linkInput.style.left 	= '0px';
+						linkInput.style.top 	= '0px';
+						linkInput.style.width 	= '256px';
+						linkInput.placeholder = 'Ссылка';
+						if (block.type == type && block.content) linkInput.value = block.content;
+						contentContainer.appendChild(linkInput);
+
+						contentContainer.getValue = function() { return linkInput.value; };
+
+					}
+
+					else {
+
+						let contentInput = document.createElement('textarea');
+						contentInput.style.position = 'absolute';
+						contentInput.style.left 	= '0px';
+						contentInput.style.top 		= '0px';
+						contentInput.style.width 	= '256px';
+						contentInput.style.height 	= '192px';
+						if (block.type == type && block.content) contentInput.value = block.content;
+						contentContainer.appendChild(contentInput);
+
+						contentContainer.getValue = function() { return contentInput.value; };
+
+					}
+
+					if (type == 'FINISH') {
+						keyboardSelector.setValues([ 'FINISH' ]);
+						keyboardSelector.selectValue('FINISH');
+					} else {
+						keyboardSelector.setValues([ 'NONE', 'NEXT', 'AB', 'ABC', 'ABCD', 'SMILE']);
+					}
+
+				};
+
+				keyboardSelector.onValueSelected = function(keyboardType) {
+
+					waysContainer.innerHTML = '';
+
+					let waysCount;
+					if (keyboardType == 'NONE') 	waysCount = 1; else
+					if (keyboardType == 'NEXT') 	waysCount = 1; else
+					if (keyboardType == 'AB') 		waysCount = 2; else
+					if (keyboardType == 'ABC') 		waysCount = 3; else
+					if (keyboardType == 'ABCD') 	waysCount = 4; else
+					if (keyboardType == 'SMILE') 	waysCount = 3;
+					else 							waysCount = 0;
+
+					for (let wayIndex = 0; wayIndex < waysCount; wayIndex++) {
+
+						let wayElement = document.createElement('div');
+						wayElement.style.position 	= 'absolute';
+						wayElement.style.left 		= (100 * wayIndex) + 'px';
+						wayElement.style.top 		= '0px';
+						wayElement.style.width 		= '100px';
+						wayElement.style.height 	= '216px';
+
+						let wayLabel = document.createElement('div');
+						wayLabel.style.position = 'absolute';
+						wayLabel.style.left 	= '4px';
+						wayLabel.style.top 		= '4px';
+						wayLabel.style.width 	= '96px';
+						wayLabel.style.height 	= '14px';
+						wayLabel.style.fontSize = '12px';
+						wayLabel.style.color 	= '#808080';
+						wayLabel.innerHTML = "Путь " + (wayIndex + 1) + ":";
+						wayElement.appendChild(wayLabel);
+
+						let wayInput = document.createElement('input');
+						wayInput.style.position = 'absolute';
+						wayInput.style.left 	= '4px';
+						wayInput.style.top 		= '20px';
+						wayInput.style.width 	= '96px';
+						if (block.ways && block.ways[wayIndex] && block.ways[wayIndex].blockId) wayInput.value = block.ways[wayIndex].blockId;
+						wayElement.appendChild(wayInput);
+
+						let scoreLabel = document.createElement('div');
+						scoreLabel.style.position 	= 'absolute';
+						scoreLabel.style.left 		= '4px';
+						scoreLabel.style.top 		= '48px';
+						scoreLabel.style.width 		= '64px';
+						scoreLabel.style.height 	= '14px';
+						scoreLabel.style.fontSize 	= '12px';
+						scoreLabel.style.color 		= '#808080';
+						scoreLabel.innerHTML = "Очки:";
+						if (keyboardType == 'NONE') scoreLabel.style.display = 'none';
+						wayElement.appendChild(scoreLabel);
+
+						let scoreInput = document.createElement('input');
+						scoreInput.style.position = 'absolute';
+						scoreInput.style.left 	= '4px';
+						scoreInput.style.top 	= '64px';
+						scoreInput.style.width 	= '96px';
+						if (block.ways && block.ways[wayIndex] && block.ways[wayIndex].score) {
+							scoreInput.value = '' + block.ways[wayIndex].score;
+						} else {
+							scoreInput.value = '' + 0;
+						}
+						if (keyboardType == 'NONE') scoreInput.style.display = 'none';
+						wayElement.appendChild(scoreInput);
+
+						wayElement.getValue = function() {
+							return {
+								blockId: wayInput.value,
+								score: +scoreInput.value
+							};
+						};
+
+						waysContainer.appendChild(wayElement);
+
+					}
+
+				};
+
+				typeSelector.onValueSelected = onTypeSelected;
+				onTypeSelected(typeSelector.selectedValue);
+
+				keyboardSelector.selectValue(block.keyboardType);
+
+				blockBody.appendChild(waysContainer);
+
+				blockRowElement.appendChild(blockBody);
+				blockElement.appendChild(blockRowElement);
+
+				blockElement.getValue = function() {
+					let ways = []; for (let i = 0; i < waysContainer.childNodes.length; i++) {
+						ways[i] = waysContainer.childNodes[i].getValue();
+					}
+					return {
+						id:				idInput.value,
+						type: 			typeSelector.selectedValue,
+						content:		contentContainer.getValue(),
+						keyboardType: 	keyboardSelector.selectedValue,
+						ways: 			ways
+					};
+				};
+
+				if (before) {
+					blocksContainer.insertBefore(blockElement, before);
+				} else {
+					blocksContainer.appendChild(blockElement);
+				}
+
+			};
+
+			let createAddBlockButton = function(blockElement) {
+				let addBlockButton = document.createElement('img');
+				addBlockButton.className = 'button';
+				addBlockButton.style.width = '24px';
+				addBlockButton.style.height = '24px';
+				addBlockButton.src = 'icons/plus-circle.png'
+				addBlockButton.onclick = function() {
+					addBlockElement({}, blockElement);
+				};
+				return addBlockButton;
+			};
+
+			httpRequestWithPassword(
+				'api/get_scenario', 'POST',
+				{
+					subjectId: 	subjectId,
+					scenarioId: scenarioId
+				},
+				function(response) {
+					let blocks = response.blocks;
+					for (let i = 0; i < blocks.length; i++) { let block = blocks[i];
+						addBlockElement(block);
+					}
+					appendBlockButtonContainer.appendChild(createAddBlockButton());
+					saveButton.onclick = function() {
+						let blocks = []; for (let i = 0; i < blocksContainer.childNodes.length; i++) {
+							blocks[i] = blocksContainer.childNodes[i].getValue();
+						}
+						httpRequestWithPassword(
+							'api/upload_scenario', 'POST',
+							{
+								subjectId: 	subjectId,
+								scenarioId: scenarioId,
+								blocks: 	blocks
+							},
+							function() {
+								location.reload();
+							},
+							function(status) {
+								if (status == 400) alert("Неверно заполненный сценарий!");
+								else alert("Ошибка! Подробнее смотрите в логах.");
+							}
+						);
+					};
+				}
+			);
+
+		}
+	);
+
+</script>
+</html>

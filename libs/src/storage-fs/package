@@ -1,0 +1,8 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'storage-stream',
+		'console-system'
+	]
+
+}

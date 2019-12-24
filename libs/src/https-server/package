@@ -1,0 +1,10 @@
+{ class: ic.Package,
+
+	dependencies: [
+		http-server,
+		console-system,
+		storage-ic,
+		ssl
+	]
+
+}

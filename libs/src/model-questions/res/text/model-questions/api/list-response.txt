@@ -1,0 +1,21 @@
+{
+	status: 'SUCCESS',
+	questions: [
+		{
+			id: '...',
+			askedAt: 43565, // Epoch time
+			askerId: '...',
+			questionText: '...',
+			questionImageUrl: '...', // Optional
+			asker: "...",
+			askerId: '...',
+			category: '...', // Optional
+			answerer: "...", // Optional
+			answeredAt: 43565, // Epoch time
+			answererId: '...', // Optional
+			answerText: '...', // Optional
+			answerImageUrl: '...' // Optional
+		},
+		...
+	]
+}

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+</body>
+
+<script defer>
+
+importJs(
+
+	[
+		'/js/url-params.js',
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js',
+		'/js/popup.js'
+	],
+
+	function() {
+
+		let urlParams = getUrlParams();
+
+		let talkId 		= urlParams['id'];
+		let talkEventId = urlParams['talk_event_id'];
+
+		httpRequest(
+			'api/get_talk', 'POST',
+			{
+				'Authorization': 'Bearer ' + promptPassword()
+			},
+			{
+				id: talkId,
+			},
+			function(response) {
+
+				let talkName 				= response.name;
+				let talkShortDescription 	= response.shortDescription;
+				let talkDescription 		= response.description;
+				let talkImageUrl 			= response.imageUrl;
+				let talkStartDate 			= response.startDate;
+				let talkEndDate 			= response.endDate;
+				let speakers 				= response.speakers;
+				let stageName 				= response.stage ? response.stage.name : undefined;
+				let talkPlacesCount 		= response.placesCount;
+
+				document.getElementById('title').innerHTML = talkName;
+
+				let caption = document.createElement('div');
+				caption.className = 'elevated'
+				caption.style.display 		= 'block';
+				caption.style.width 		= '320px';
+				caption.style.padding 		= '8px'
+				caption.style.margin 		= '8px'
+				caption.style.background 	= '#FFFFFF';
+
+					// Name:
+
+					let nameLabel = document.createElement('div');
+					nameLabel.style.display 	= 'block';
+					nameLabel.style.width 		= '280px';
+					nameLabel.style.color 		= '#808080';
+					nameLabel.style.fontSize 	= '12px';
+					nameLabel.innerHTML = "Название";
+					caption.appendChild(nameLabel);
+
+					let nameContainer = document.createElement('div');
+					nameContainer.style.display 	= 'block';
+					nameContainer.style.width 		= '320px';
+					nameContainer.style.height 		= '24px';
+
+						let nameTextElement = document.createElement('div');
+						nameTextElement.style.display 			= 'inline-block';
+						nameTextElement.style.width 			= '296px';
+						nameTextElement.style.height 			= '24px';
+						nameTextElement.style.verticalAlign 	= 'top';
+						nameTextElement.style.lineHeight 		= '24px';
+						nameTextElement.style.fontSize 			= '14px';
+						nameTextElement.innerHTML = talkName;
+						nameContainer.appendChild(nameTextElement);
+
+						let nameEditButton = document.createElement('img');
+						nameEditButton.className = 'button';
+						nameEditButton.style.display 	= 'inline-block';
+						nameEditButton.style.width 		= '24px';
+						nameEditButton.style.height 	= '24px';
+						nameEditButton.src = '/icons/pencil.png';
+						nameEditButton.onclick = function() {
+							let name = prompt("Введите название выступления", talkName);
+							if (!name) return;
+							httpRequest(
+								'api/set_talk_name', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 	talkId,
+									name: 	name
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						nameContainer.appendChild(nameEditButton);
+
+					caption.appendChild(nameContainer);
+
+					// Short description:
+
+					let shortDescriptionLabel = document.createElement('div');
+					shortDescriptionLabel.style.display 	= 'block';
+					shortDescriptionLabel.style.width 		= '320px';
+					shortDescriptionLabel.style.color 		= '#808080';
+					shortDescriptionLabel.style.fontSize 	= '12px';
+					shortDescriptionLabel.style.marginTop 	= '8px';
+					shortDescriptionLabel.innerHTML = "Краткое описание";
+					caption.appendChild(shortDescriptionLabel);
+
+					let shortDescriptionContainer = document.createElement('div');
+					shortDescriptionContainer.style.display = 'block';
+					shortDescriptionContainer.style.width 	= '320px';
+
+						let shortDescriptionTextElement = document.createElement('div');
+						shortDescriptionTextElement.style.display 		= 'inline-block';
+						shortDescriptionTextElement.style.width 		= '296px';
+						shortDescriptionTextElement.style.marginTop 	= '4px';
+						shortDescriptionTextElement.style.verticalAlign = 'top';
+						shortDescriptionTextElement.style.fontSize 		= '12px';
+						shortDescriptionTextElement.innerHTML = talkShortDescription;
+						shortDescriptionContainer.appendChild(shortDescriptionTextElement);
+
+						let shortDescriptionEditButton = document.createElement('img');
+						shortDescriptionEditButton.className 		= 'button';
+						shortDescriptionEditButton.style.display 	= 'inline-block';
+						shortDescriptionEditButton.style.width 		= '24px';
+						shortDescriptionEditButton.style.height 	= '24px';
+						shortDescriptionEditButton.src = '/icons/pencil.png';
+						shortDescriptionEditButton.onclick = function() {
+							let shortDescription = prompt("Введите краткое описание выступления", talkShortDescription);
+							if (!shortDescription) return;
+							httpRequest(
+								'api/set_talk_short_description', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 				talkId,
+									shortDescription: 	shortDescription
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						shortDescriptionContainer.appendChild(shortDescriptionEditButton);
+
+					caption.appendChild(shortDescriptionContainer);
+
+					// Description:
+
+					let descriptionLabel = document.createElement('div');
+					descriptionLabel.style.display 		= 'block';
+					descriptionLabel.style.width 		= '320px';
+					descriptionLabel.style.color 		= '#808080';
+					descriptionLabel.style.fontSize 	= '12px';
+					descriptionLabel.style.marginTop 	= '8px';
+					descriptionLabel.innerHTML = "Описание";
+					caption.appendChild(descriptionLabel);
+
+					let descriptionContainer = document.createElement('div');
+					descriptionContainer.style.display 		= 'block';
+					descriptionContainer.style.width 		= '320px';
+
+						let descriptionTextElement = document.createElement('div');
+						descriptionTextElement.style.display 		= 'inline-block';
+						descriptionTextElement.style.width 			= '296px';
+						descriptionTextElement.style.marginTop 		= '4px';
+						descriptionTextElement.style.verticalAlign 	= 'top';
+						descriptionTextElement.style.fontSize 		= '12px';
+						descriptionTextElement.innerHTML = talkDescription;
+						descriptionContainer.appendChild(descriptionTextElement);
+
+						let descriptionEditButton = document.createElement('img');
+						descriptionEditButton.className 	= 'button';
+						descriptionEditButton.style.display = 'inline-block';
+						descriptionEditButton.style.width 	= '24px';
+						descriptionEditButton.style.height 	= '24px';
+						descriptionEditButton.src = '/icons/pencil.png';
+						descriptionEditButton.onclick = function() {
+							let description = prompt("Введите описание выступления", talkDescription);
+							if (!description) return;
+							httpRequest(
+								'api/set_talk_description', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 			talkId,
+									description: 	description
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						descriptionContainer.appendChild(descriptionEditButton);
+
+					caption.appendChild(descriptionContainer);
+
+					// Image:
+
+					let imageLabel = document.createElement('div');
+					imageLabel.style.display 	= 'block';
+					imageLabel.style.width 		= '320px';
+					imageLabel.style.color 		= '#808080';
+					imageLabel.style.fontSize 	= '12px';
+					imageLabel.style.marginTop 	= '8px';
+					imageLabel.innerHTML = "Картинка";
+					caption.appendChild(imageLabel);
+
+					let imageContainer = document.createElement('div');
+					imageContainer.style.display 	= 'block';
+					imageContainer.style.width 		= '320px';
+
+						let imageElement = document.createElement('img');
+						imageElement.style.display 			= 'inline-block';
+						imageElement.style.width 			= '288px';
+						imageElement.style.width 			= '288px';
+						imageElement.style.marginTop 		= '4px';
+						imageElement.style.marginRight 		= '8px';
+						imageElement.style.verticalAlign 	= 'top';
+						imageElement.style.fontSize 		= '12px';
+						imageElement.style.background 		= '#808080';
+						if (talkImageUrl) {
+							imageElement.src = talkImageUrl;
+						} else {
+							imageElement.src = '/img/placeholder.png';
+						}
+						imageContainer.appendChild(imageElement);
+
+						let imageEditButton = document.createElement('img');
+						imageEditButton.className 		= 'button';
+						imageEditButton.style.display 	= 'inline-block';
+						imageEditButton.style.width 	= '24px';
+						imageEditButton.style.height 	= '24px';
+						imageEditButton.src = '/icons/pencil.png';
+						imageEditButton.onclick = function() {
+							let imageUrl = prompt("Введите URL картинки",talkImageUrl);
+							if (!imageUrl) return;
+							httpRequest(
+								'api/set_talk_image_url', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 		talkId,
+									imageUrl: 	imageUrl
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						imageContainer.appendChild(imageEditButton);
+
+					caption.appendChild(imageContainer);
+
+					// Dates:
+
+					let datesContainer = document.createElement('div');
+					datesContainer.style.display 	= 'block';
+					datesContainer.style.width 		= '320px';
+
+						// Start date:
+
+						let startDateBlock = document.createElement('div');
+						startDateBlock.style.display 	= 'inline-block';
+						startDateBlock.style.width 		= '152px';
+
+							let startDateLabel = document.createElement('div');
+							startDateLabel.style.display 	= 'block';
+							startDateLabel.style.width 		= '152px';
+							startDateLabel.style.color 		= '#808080';
+							startDateLabel.style.fontSize 	= '12px';
+							startDateLabel.style.marginTop 	= '8px';
+							startDateLabel.innerHTML 		= "Начало";
+							startDateBlock.appendChild(startDateLabel);
+
+							let startDateContainer = document.createElement('div');
+							startDateContainer.style.display 	= 'block';
+							startDateContainer.style.width 		= '152px';
+							startDateContainer.style.height 	= '24px';
+
+								let startDateTextElement = document.createElement('div');
+								startDateTextElement.style.display 			= 'inline-block';
+								startDateTextElement.style.width 			= '128px';
+								startDateTextElement.style.height 			= '24px';
+								startDateTextElement.style.verticalAlign 	= 'top';
+								startDateTextElement.style.lineHeight 		= '24px';
+								startDateTextElement.style.fontSize 		= '14px';
+								startDateTextElement.innerHTML = talkStartDate;
+								startDateContainer.appendChild(startDateTextElement);
+
+								let startDateEditButton = document.createElement('img');
+								startDateEditButton.className = 'button';
+								startDateEditButton.style.display 	= 'inline-block';
+								startDateEditButton.style.width 	= '24px';
+								startDateEditButton.style.height 	= '24px';
+								startDateEditButton.src = '/icons/pencil.png';
+								startDateEditButton.onclick = function() {
+									let startDate = prompt("Введите дату в формате YYYY.MM.DD HH:MM", talkStartDate);
+									if (!startDate) return;
+									httpRequest(
+										'api/set_talk_start_date', 'POST',
+										{
+											Authorization: 'Bearer ' + promptPassword()
+										},
+										{
+											id: 		talkId,
+											startDate: 	startDate
+										},
+										function(response) {
+											location.reload();
+										},
+										function(status) {
+											if (status == 403) resetPassword();
+										}
+									);
+								};
+								startDateContainer.appendChild(startDateEditButton);
+
+							startDateBlock.appendChild(startDateContainer);
+
+						datesContainer.appendChild(startDateBlock);
+
+						// Space:
+
+						let datesSpace = document.createElement('div');
+						datesSpace.style.display 	= 'inline-block';
+						datesSpace.style.width 		= '16px';
+						datesSpace.style.height 	= '100%';
+						datesContainer.appendChild(datesSpace);
+
+						// End date:
+
+						let endDateBlock = document.createElement('div');
+						endDateBlock.style.display 	= 'inline-block';
+						endDateBlock.style.width 	= '152px';
+
+							let endDateLabel = document.createElement('div');
+							endDateLabel.style.display 		= 'block';
+							endDateLabel.style.width 		= '152px';
+							endDateLabel.style.color 		= '#808080';
+							endDateLabel.style.fontSize 	= '12px';
+							endDateLabel.style.marginTop 	= '8px';
+							endDateLabel.innerHTML 	= "Конец";
+							endDateBlock.appendChild(endDateLabel);
+
+							let endDateContainer = document.createElement('div');
+							endDateContainer.style.display 	= 'block';
+							endDateContainer.style.width 	= '152px';
+							endDateContainer.style.height 	= '24px';
+
+								let endDateTextElement = document.createElement('div');
+								endDateTextElement.style.display 		= 'inline-block';
+								endDateTextElement.style.width 			= '128px';
+								endDateTextElement.style.height 		= '24px';
+								endDateTextElement.style.verticalAlign 	= 'top';
+								endDateTextElement.style.lineHeight 	= '24px';
+								endDateTextElement.style.fontSize 		= '14px';
+								endDateTextElement.innerHTML = talkEndDate;
+								endDateContainer.appendChild(endDateTextElement);
+
+								let endDateEditButton = document.createElement('img');
+								endDateEditButton.className = 'button';
+								endDateEditButton.style.display = 'inline-block';
+								endDateEditButton.style.width 	= '24px';
+								endDateEditButton.style.height 	= '24px';
+								endDateEditButton.src = '/icons/pencil.png';
+								endDateEditButton.onclick = function() {
+									let endDate = prompt("Введите дату в формате YYYY.MM.DD HH:MM", talkEndDate);
+									if (!endDate) return;
+									httpRequest(
+										'api/set_talk_end_date', 'POST',
+										{
+											Authorization: 'Bearer ' + promptPassword()
+										},
+										{
+											id: 		talkId,
+											endDate: 	endDate
+										},
+										function(response) {
+											location.reload();
+										},
+										function(status) {
+											if (status == 403) resetPassword();
+										}
+									);
+								};
+								endDateContainer.appendChild(endDateEditButton);
+
+							endDateBlock.appendChild(endDateContainer);
+
+						datesContainer.appendChild(endDateBlock);
+
+					caption.appendChild(datesContainer);
+
+					// Speakers:
+
+					let speakersLabel = document.createElement('div');
+					speakersLabel.style.display 	= 'block';
+					speakersLabel.style.width 		= '320px';
+					speakersLabel.style.color 		= '#808080';
+					speakersLabel.style.fontSize 	= '12px';
+					speakersLabel.style.marginTop 	= '8px';
+					speakersLabel.innerHTML = "Спикеры";
+					caption.appendChild(speakersLabel);
+
+					let speakersContainer = document.createElement('div');
+					speakersContainer.style.width 			= '280px';
+					speakersContainer.style.background 		= '#E0E0E0';
+					speakersContainer.style.paddingTop 		= '8px';
+					speakersContainer.style.paddingBottom 	= '8px';
+
+					for (let i = 0; i < speakers.length; i++) { let speaker = speakers[i];
+
+						let itemElement = document.createElement('div');
+
+						itemElement.className = 'elevated button';
+						itemElement.style.display 		= 'block';
+						itemElement.style.width 		= '256px';
+						itemElement.style.height 		= '24px';
+						itemElement.style.padding 		= '4px'
+						itemElement.style.margin 		= '8px'
+						itemElement.style.background 	= '#FFFFFF';
+
+							let nameTextElement = document.createElement('div');
+							nameTextElement.style.display 		= 'inline-block';
+							nameTextElement.style.width 		= '228px';
+							nameTextElement.style.height 		= '24px';
+							nameTextElement.style.paddingLeft 	= '4px'
+							nameTextElement.style.verticalAlign = 'top';
+							nameTextElement.style.lineHeight 	= '24px';
+							nameTextElement.style.fontSize 	= '14px';
+							nameTextElement.innerHTML = speaker.surname + ' ' + speaker.name;
+							itemElement.appendChild(nameTextElement);
+
+							let speakerRemoveButton = document.createElement('img');
+							speakerRemoveButton.className = 'button';
+							speakerRemoveButton.style.display = 'inline-block';
+							speakerRemoveButton.style.width 	= '24px';
+							speakerRemoveButton.style.height 	= '24px';
+							speakerRemoveButton.src = '/icons/delete-forever.png';
+							speakerRemoveButton.onclick = function() {
+								httpRequest(
+									'api/remove_speaker_from_talk', 'POST',
+									{
+										Authorization: 'Bearer ' + promptPassword()
+									},
+									{
+										talkId: 	talkId,
+										speakerId: 	speaker.id
+									},
+									function(response) {
+										location.reload();
+									},
+									function(status) {
+										if (status == 403) resetPassword();
+									}
+								);
+							};
+							itemElement.appendChild(speakerRemoveButton);
+
+						speakersContainer.appendChild(itemElement);
+
+					}
+
+					caption.appendChild(speakersContainer);
+
+					let addSpeakerButton = document.createElement('button');
+					addSpeakerButton.style.display 	= 'block';
+					addSpeakerButton.style.width 		= '320px';
+					addSpeakerButton.style.marginTop 	= '8px';
+					addSpeakerButton.innerHTML = "ДОБАВИТЬ СПИКЕРА";
+					addSpeakerButton.onclick = function() {
+
+						showPopup(function(popup) {
+
+							let popupContainer = document.createElement('div');
+							popupContainer.className = 'elevated';
+							popupContainer.style.width 		= '320px';
+							popupContainer.style.height 	= '320px';
+							popupContainer.style.background = '#FFFFFF';
+							popupContainer.style.padding 	= '8px';
+
+								let itemsContainer = document.createElement('div');
+								itemsContainer.style.width 			= '304px';
+								itemsContainer.style.height 		= '304px';
+								itemsContainer.style.background 	= '#E0E0E0';
+								itemsContainer.style.paddingTop 	= '8px';
+								itemsContainer.style.paddingBottom 	= '8px';
+								itemsContainer.style.overflow 		= 'scroll';
+
+								httpRequest(
+									'api/get_speakers', 'POST',
+									{
+										'Authorization': 'Bearer ' + promptPassword()
+									},
+									{
+										talkEventId: talkEventId
+									},
+									function(response) {
+
+										let speakers = response.speakers;
+
+										for (let i = 0; i < speakers.length; i++) { let speaker = speakers[i];
+
+											let itemElement = document.createElement('div');
+
+											itemElement.className = 'elevated button';
+											itemElement.style.display 		= 'block';
+											itemElement.style.width 		= '256px';
+											itemElement.style.height 		= '24px';
+											itemElement.style.padding 		= '4px'
+											itemElement.style.margin 		= '8px'
+											itemElement.style.background 	= '#FFFFFF';
+
+												let nameTextElement = document.createElement('div');
+												nameTextElement.style.display 		= 'inline-block';
+												nameTextElement.style.width 		= '256px';
+												nameTextElement.style.height 		= '24px';
+												nameTextElement.style.paddingLeft 	= '4px'
+												nameTextElement.style.verticalAlign = 'top';
+												nameTextElement.style.lineHeight 	= '24px';
+												nameTextElement.style.fontSize 	= '14px';
+												nameTextElement.innerHTML = speaker.surname + ' ' + speaker.name;
+												itemElement.appendChild(nameTextElement);
+
+											itemElement.onclick = function() {
+
+												httpRequest(
+													'api/add_speaker_to_talk', 'POST',
+													{
+														'Authorization': 'Bearer ' + promptPassword()
+													},
+													{
+														talkId: 	talkId,
+														speakerId: 	speaker.id
+													},
+													function(response) {
+														location.reload();
+													},
+													function(status) {
+														if (status == 403) resetPassword();
+													}
+												);
+
+											};
+
+											itemsContainer.appendChild(itemElement);
+
+										}
+
+									},
+									function(status) {
+										if (status == 403) resetPassword();
+									}
+								);
+
+								popupContainer.appendChild(itemsContainer);
+
+							return popupContainer;
+
+						});
+
+					};
+
+					caption.appendChild(addSpeakerButton);
+
+					// Stage:
+
+					let stageLabel = document.createElement('div');
+					stageLabel.style.display 	= 'block';
+					stageLabel.style.width 		= '280px';
+					stageLabel.style.color 		= '#808080';
+					stageLabel.style.fontSize 	= '12px';
+					stageLabel.style.marginTop 	= '8px';
+					stageLabel.innerHTML = "Сцена";
+					caption.appendChild(stageLabel);
+
+					let stageContainer = document.createElement('div');
+					stageContainer.style.display 	= 'block';
+					stageContainer.style.width 		= '320px';
+					stageContainer.style.height 	= '24px';
+
+						let stageTextElement = document.createElement('div');
+						stageTextElement.style.display 			= 'inline-block';
+						stageTextElement.style.width 			= '296px';
+						stageTextElement.style.height 			= '24px';
+						stageTextElement.style.verticalAlign 	= 'top';
+						stageTextElement.style.lineHeight 		= '24px';
+						stageTextElement.style.fontSize 		= '14px';
+						stageTextElement.innerHTML = stageName;
+						stageContainer.appendChild(stageTextElement);
+
+						let stageEditButton = document.createElement('img');
+						stageEditButton.className = 'button';
+						stageEditButton.style.display 	= 'inline-block';
+						stageEditButton.style.width 		= '24px';
+						stageEditButton.style.height 	= '24px';
+						stageEditButton.src = '/icons/pencil.png';
+						stageEditButton.onclick = function() {
+
+							showPopup(function(popup) {
+
+							let popupContainer = document.createElement('div');
+							popupContainer.className = 'elevated';
+							popupContainer.style.width 		= '280px';
+							popupContainer.style.height 	= '280px';
+							popupContainer.style.background = '#FFFFFF';
+							popupContainer.style.padding 	= '8px';
+
+								let itemsContainer = document.createElement('div');
+								itemsContainer.style.width 			= '280px';
+								itemsContainer.style.background 	= '#E0E0E0';
+								itemsContainer.style.paddingTop 	= '8px';
+								itemsContainer.style.paddingBottom 	= '8px';
+
+								httpRequest(
+									'api/get_stages', 'POST',
+									{
+										'Authorization': 'Bearer ' + promptPassword()
+									},
+									{
+										talkEventId: talkEventId
+									},
+									function(response) {
+
+										let stages = response.stages;
+
+										for (let i = 0; i < stages.length; i++) { let stage = stages[i];
+
+											let itemElement = document.createElement('div');
+
+											itemElement.className = 'elevated button';
+											itemElement.style.display 		= 'block';
+											itemElement.style.width 		= '256px';
+											itemElement.style.height 		= '24px';
+											itemElement.style.padding 		= '4px'
+											itemElement.style.margin 		= '8px'
+											itemElement.style.background 	= '#FFFFFF';
+
+												let nameTextElement = document.createElement('div');
+												nameTextElement.style.display 		= 'inline-block';
+												nameTextElement.style.width 		= '256px';
+												nameTextElement.style.height 		= '24px';
+												nameTextElement.style.paddingLeft 	= '4px'
+												nameTextElement.style.verticalAlign = 'top';
+												nameTextElement.style.lineHeight 	= '24px';
+												nameTextElement.style.fontSize 	= '14px';
+												nameTextElement.innerHTML = stage.name;
+												itemElement.appendChild(nameTextElement);
+
+											itemElement.onclick = function() {
+
+												httpRequest(
+													'api/set_talk_stage', 'POST',
+													{
+														'Authorization': 'Bearer ' + promptPassword()
+													},
+													{
+														id: 		talkId,
+														stageId: 	stage.id
+													},
+													function(response) {
+														location.reload();
+													},
+													function(status) {
+														if (status == 403) resetPassword();
+													}
+												);
+
+											};
+
+											itemsContainer.appendChild(itemElement);
+
+										}
+
+									},
+									function(status) {
+										if (status == 403) resetPassword();
+									}
+								);
+
+								popupContainer.appendChild(itemsContainer);
+
+							return popupContainer;
+
+						});
+
+						};
+						stageContainer.appendChild(stageEditButton);
+
+					caption.appendChild(stageContainer);
+
+
+					// Places count:
+
+					let placesCountLabel = document.createElement('div');
+					placesCountLabel.style.display 		= 'block';
+					placesCountLabel.style.width 		= '320px';
+					placesCountLabel.style.color 		= '#808080';
+					placesCountLabel.style.fontSize 	= '12px';
+					placesCountLabel.style.marginTop 	= '8px';
+					placesCountLabel.innerHTML = "Количество мест";
+					caption.appendChild(placesCountLabel);
+
+					let placesCountContainer = document.createElement('div');
+					placesCountContainer.style.display 		= 'block';
+					placesCountContainer.style.width 		= '320px';
+
+						let placesCountTextElement = document.createElement('div');
+						placesCountTextElement.style.display 		= 'inline-block';
+						placesCountTextElement.style.width 			= '296px';
+						placesCountTextElement.style.marginTop 		= '4px';
+						placesCountTextElement.style.verticalAlign 	= 'top';
+						placesCountTextElement.style.fontSize 		= '12px';
+						placesCountTextElement.innerHTML = '' + talkPlacesCount;
+						placesCountContainer.appendChild(placesCountTextElement);
+
+						let placesCountEditButton = document.createElement('img');
+						placesCountEditButton.className 	= 'button';
+						placesCountEditButton.style.display = 'inline-block';
+						placesCountEditButton.style.width 	= '24px';
+						placesCountEditButton.style.height 	= '24px';
+						placesCountEditButton.src = '/icons/pencil.png';
+						placesCountEditButton.onclick = function() {
+							let placesCountString = prompt("Введите количество мест или оставьте пустым", '' + talkPlacesCount);
+							if (placesCountString === null) return;
+							let placesCount = placesCountString == '' ? null : +placesCountString;
+							httpRequest(
+								'api/set_talk_places_count', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 			talkId,
+									placesCount: 	placesCount
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						placesCountContainer.appendChild(placesCountEditButton);
+
+					caption.appendChild(placesCountContainer);
+
+
+				document.body.appendChild(caption);
+
+			},
+			function(status) {
+				if (status == 403) resetPassword();
+			}
+		);
+
+	}
+
+);
+
+</script>
+
+</html>

@@ -1,0 +1,193 @@
+// Create arrangement:
+
+POST <host>/arrangements/create
+
+REQUEST: {
+	name: "...", // Optional
+	startDate: 415256, // Epoch millis, Optional
+	endDate: 415256, // Epoch millis, Optional
+	cancelDate: 415256, // Epoch millis, Optional
+	costPoints: 42, // Epoch millis, Optional
+	place: "...", // Epoch millis, Optional
+	isActive: true | false // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	id: '...'
+}
+
+
+// Get arrangement:
+
+POST <host>/arrangements/get
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+	name: "...", // Optional
+	startDate: 415256, // Epoch millis, Optional
+	endDate: 415256, // Epoch millis, Optional
+	cancelDate: 415256, // Epoch millis, Optional
+	costPoints: 42, // Epoch millis, Optional
+	place: "..." // Epoch millis, Optional
+	isActive: true | false
+}
+
+
+// Modify arrangement:
+
+POST <host>/arrangements/modify
+
+REQUEST: {
+	id: '...',
+	name: "...", // Optional
+	startDate: 415256, // Epoch millis, Optional
+	endDate: 415256, // Epoch millis, Optional
+	cancelDate: 415256, // Epoch millis, Optional
+	costPoints: 42, // Epoch millis, Optional
+	place: "..." // Epoch millis, Optional
+	isActive: true | false // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// Delete arrangement:
+
+POST <host>/arrangements/delete
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// List arrangements:
+
+GET <host>/arrangements/list
+
+RESPONSE: {
+	status: SUCCESS,
+	arrangements: [
+		{
+        	id: '...',
+        	name: "...", // Optional
+        	startDate: 415256, // Epoch millis, Optional
+        	endDate: 415256, // Epoch millis, Optional
+			cancelDate: 415256, // Epoch millis, Optional
+        	costPoints: 42, // Epoch millis, Optional
+        	place: "..." // Epoch millis, Optional
+			isActive: true | false
+			arrangementUsers: [ // If called by admin
+            	{
+                	user: {
+                		id: '...',
+                		quadrasoftId: '...',
+                		points: 323
+                	}
+                	state: OPEN | CONFIRMED | CANCELED
+                },
+                ...
+            ]
+        },
+        ...
+	]
+}
+
+
+// List arrangement users:
+
+POST <host>/arrangements/users
+
+REQUEST: {
+	arrangementId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	arrangementUsers: [
+		{
+        	userId: '...',
+        	state: OPEN | CONFIRMED | CANCELED
+        },
+        ...
+	]
+}
+
+
+// List user arrangements:
+
+POST <host>/arrangements/user
+
+REQUEST: {
+	userId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	arrangements: [
+    	{
+        	id: '...',
+        	name: "...", // Optional
+        	startDate: 415256, // Epoch millis, Optional
+        	endDate: 415256, // Epoch millis, Optional
+			cancelDate: 415256, // Epoch millis, Optional
+        	costPoints: 42, // Epoch millis, Optional
+        	place: "..." // Epoch millis, Optional
+        	state: OPEN | CONFIRMED | CANCELED // Optional
+        	sActive: true | false
+        },
+        ...
+    ]
+}
+
+
+// Confirm arrangement user:
+
+POST <host>/arrangements/confirm
+
+REQUEST: {
+	arrangementId: '...'
+	userId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | ARRANGEMENT_NOT_EXISTS | ARRANGEMENT_USER_NOT_EXISTS
+}
+
+
+// Cancel arrangement user:
+
+POST <host>/arrangements/cancel
+
+REQUEST: {
+	arrangementId: '...'
+	userId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | ARRANGEMENT_NOT_EXISTS | ARRANGEMENT_USER_NOT_EXISTS
+}
+
+
+// Add arrangement user:
+
+POST <host>/arrangements/add-user
+
+REQUEST: {
+	arrangementId: '...'
+	userId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | ARRANGEMENT_NOT_EXISTS | ARRANGEMENT_USER_ALREADY_EXISTS
+}

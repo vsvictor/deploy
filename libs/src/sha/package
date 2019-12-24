@@ -1,0 +1,14 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		core,
+		'test'
+	],
+
+	jarDependencies: [
+        'http://central.maven.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.jar'
+    ],
+
+    testClass: 'ic.hash.test.ShaTest'
+
+}

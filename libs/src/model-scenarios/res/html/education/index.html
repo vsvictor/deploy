@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title>Обучение - список тем</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="js/import.js"></script>
+
+<body>
+
+	<button onclick="addSubject()">Добавить тему</button>
+
+	<div style="height: 8px"></div>
+
+	<div id="items-container"></div>
+
+</body>
+
+<script defer>
+
+var addSubject;
+
+importJs([
+	'js/url-params.js',
+	'js/file-input-button.js',
+	'js/http-client-password.js'
+], function() {
+
+	let itemsContainer = document.getElementById('items-container');
+	itemsContainer.style.padding 	= '4px';
+	itemsContainer.style.background = '#E0E0E0';
+
+	httpRequestWithPassword(
+		'api/get_subjects', 'POST',
+		{},
+		function(response) {
+
+			let subjects = response.subjects;
+
+			if (!subjects) return;
+
+			for (let i = 0; i < subjects.length; i++) { let subject = subjects[i];
+
+				let itemElement = document.createElement('div');
+				itemElement.className = 'elevated button';
+				itemElement.style.display 		= 'block';
+				itemElement.style.width 		= '332px';
+				itemElement.style.height 		= '24px';
+				itemElement.style.padding 		= '4px'
+				itemElement.style.margin 		= '8px'
+				itemElement.style.background 	= '#FFFFFF';
+
+					let subjectTextElement = document.createElement('div');
+					subjectTextElement.style.display 		= 'inline-block';
+					subjectTextElement.style.width 			= '256px';
+					subjectTextElement.style.height 		= '24px';
+					subjectTextElement.style.paddingLeft 	= '4px'
+					subjectTextElement.style.verticalAlign 	= 'top';
+					subjectTextElement.style.lineHeight 	= '24px';
+					subjectTextElement.style.fontSize 		= '14px';
+					subjectTextElement.innerHTML = subject.title;
+					subjectTextElement.onclick = function() {
+						location.href='subject?subject_id=' + subject.id;
+					};
+					itemElement.appendChild(subjectTextElement);
+
+					let editButton = document.createElement('img');
+					editButton.className = 'button';
+					editButton.style.display 	= 'inline-block';
+					editButton.style.width 		= '24px';
+					editButton.style.height 	= '24px';
+					editButton.src = '/icons/pencil.png';
+					editButton.title = "Переименовать тему";
+					editButton.onclick = function() {
+						let title = prompt("Введите название темы");
+						if (!title) return;
+						httpRequestWithPassword(
+							'api/set_subject_title', 'POST',
+							{
+								subjectId: subject.id,
+								title: title
+							},
+							function(response) {
+								location.reload();
+							}
+						);
+					};
+					itemElement.appendChild(editButton);
+
+					let rolesButton = document.createElement('img');
+					rolesButton.className = 'button';
+					rolesButton.style.display 	= 'inline-block';
+					rolesButton.style.width 	= '24px';
+					rolesButton.style.height 	= '24px';
+					rolesButton.src = '/icons/account-group.png';
+					rolesButton.title = "Изменить роли";
+					rolesButton.onclick = function() {
+						let rolesString = "";
+						for (let j = 0; j < subject.roles.length; j++) {
+							if (j != 0) rolesString += ' ';
+							rolesString += subject.roles[j];
+						}
+						rolesString = prompt("Введите роли (через пробел)", rolesString);
+						if (!rolesString) return;
+						console.log(rolesString);
+						let roles = rolesString.split(' ');
+						httpRequestWithPassword(
+							'api/set_subject_roles', 'POST',
+							{
+								subjectId: subject.id,
+								roles: roles
+							},
+							function(response) {
+								location.reload();
+							}
+						);
+					};
+					itemElement.appendChild(rolesButton);
+
+					let deleteButton = document.createElement('img');
+					deleteButton.className = 'button';
+					deleteButton.style.display 	= 'inline-block';
+					deleteButton.style.width 	= '24px';
+					deleteButton.style.height 	= '24px';
+					deleteButton.src = '/icons/delete-forever.png';
+					deleteButton.title = "Удалить тему";
+					deleteButton.onclick = function() {
+						if (!confirm("Удалить тему \"" + subject.title + "\"?")) return;
+						httpRequestWithPassword(
+							'api/delete_subject', 'POST',
+							{
+								subjectId: subject.id
+							},
+							function(response) {
+								location.reload();
+							}
+						);
+					}
+					itemElement.appendChild(deleteButton);
+
+				itemsContainer.appendChild(itemElement);
+
+			}
+
+		}
+	);
+
+	addSubject = function() {
+
+		let title = prompt("Введите название темы");
+		if (!title) return;
+
+		httpRequestWithPassword(
+			'api/add_subject', 'POST',
+			{
+				title: title
+			},
+			function(response) {
+				location.reload();
+			}
+		);
+
+	};
+
+});
+
+</script>
+
+</html>

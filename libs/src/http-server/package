@@ -1,0 +1,9 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'socket-rr-server',
+		'http',
+		'json',
+	]
+
+}

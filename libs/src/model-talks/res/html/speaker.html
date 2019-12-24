@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+</body>
+
+<script defer>
+
+importJs(
+
+	[
+		'/js/url-params.js',
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js',
+		'/js/popup.js'
+	],
+
+	function() {
+
+		let urlParams = getUrlParams();
+
+		let speakerId = urlParams['id'];
+
+		httpRequest(
+			'api/get_speaker', 'POST',
+			{
+				'Authorization': 'Bearer ' + promptPassword()
+			},
+			{
+				id: speakerId,
+			},
+			function(response) {
+
+				let speakerName 			= response.name;
+				let speakerSurname 			= response.surname;
+				let speakerShortDescription = response.shortDescription;
+				let speakerDescription 		= response.description;
+				let speakerImageUrl 		= response.imageUrl;
+				let speakerShowInList 		= response.showInList;
+
+				document.getElementById('title').innerHTML = speakerName;
+
+				let caption = document.createElement('div');
+				caption.className = 'elevated'
+				caption.style.display 		= 'block';
+				caption.style.width 		= '320px';
+				caption.style.padding 		= '8px'
+				caption.style.margin 		= '8px'
+				caption.style.background 	= '#FFFFFF';
+
+					// To show in list:
+
+					let showInListLabel = document.createElement('div');
+					showInListLabel.style.display 	= 'block';
+					showInListLabel.style.width 		= '280px';
+					showInListLabel.style.color 		= '#808080';
+					showInListLabel.style.fontSize 	= '12px';
+					showInListLabel.innerHTML = "Показывать в списке";
+					caption.appendChild(showInListLabel);
+
+					let showInListContainer = document.createElement('div');
+					showInListContainer.style.display 	= 'block';
+					showInListContainer.style.width 		= '320px';
+					showInListContainer.style.height 		= '24px';
+
+						let showInListTextElement = document.createElement('div');
+						showInListTextElement.style.display 		= 'inline-block';
+						showInListTextElement.style.width 			= '296px';
+						showInListTextElement.style.height 			= '24px';
+						showInListTextElement.style.verticalAlign 	= 'top';
+						showInListTextElement.style.lineHeight 		= '24px';
+						showInListTextElement.style.fontSize 		= '14px';
+						showInListTextElement.innerHTML = speakerShowInList;
+						showInListContainer.appendChild(showInListTextElement);
+
+						let showInListEditButton = document.createElement('img');
+						showInListEditButton.className = 'button';
+						showInListEditButton.style.display 	= 'inline-block';
+						showInListEditButton.style.width 	= '24px';
+						showInListEditButton.style.height 	= '24px';
+						showInListEditButton.src = '/icons/pencil.png';
+						showInListEditButton.onclick = function() {
+							showPopup(function() {
+								let popup = document.createElement('div');
+								let trueButton = document.createElement('button');
+								trueButton.innerHTML = 'true';
+								trueButton.onclick = function() {
+									httpRequest(
+										'api/set_speaker_show_in_list', 'POST',
+										{
+											Authorization: 'Bearer ' + promptPassword()
+										},
+										{
+											id: 		speakerId,
+											showInList: true
+										},
+										function(response) {
+											location.reload();
+										},
+										function(status) {
+											if (status == 403) resetPassword();
+										}
+									);
+								};
+								popup.appendChild(trueButton);
+								let falseButton = document.createElement('button');
+								falseButton.innerHTML = 'false';
+								falseButton.onclick = function() {
+									httpRequest(
+										'api/set_speaker_show_in_list', 'POST',
+										{
+											Authorization: 'Bearer ' + promptPassword()
+										},
+										{
+											id: 		speakerId,
+											showInList: false
+										},
+										function(response) {
+											location.reload();
+										},
+										function(status) {
+											if (status == 403) resetPassword();
+										}
+									);
+								};
+								popup.appendChild(falseButton);
+								return popup;
+							});
+
+						};
+						showInListContainer.appendChild(showInListEditButton);
+
+					caption.appendChild(showInListContainer);
+
+					// Name:
+
+					let nameLabel = document.createElement('div');
+					nameLabel.style.display 	= 'block';
+					nameLabel.style.width 		= '280px';
+					nameLabel.style.color 		= '#808080';
+					nameLabel.style.fontSize 	= '12px';
+					nameLabel.innerHTML = "Имя";
+					caption.appendChild(nameLabel);
+
+					let nameContainer = document.createElement('div');
+					nameContainer.style.display 	= 'block';
+					nameContainer.style.width 		= '320px';
+					nameContainer.style.height 		= '24px';
+
+						let nameTextElement = document.createElement('div');
+						nameTextElement.style.display 			= 'inline-block';
+						nameTextElement.style.width 			= '296px';
+						nameTextElement.style.height 			= '24px';
+						nameTextElement.style.verticalAlign 	= 'top';
+						nameTextElement.style.lineHeight 		= '24px';
+						nameTextElement.style.fontSize 			= '14px';
+						nameTextElement.innerHTML = speakerName;
+						nameContainer.appendChild(nameTextElement);
+
+						let nameEditButton = document.createElement('img');
+						nameEditButton.className = 'button';
+						nameEditButton.style.display 	= 'inline-block';
+						nameEditButton.style.width 		= '24px';
+						nameEditButton.style.height 	= '24px';
+						nameEditButton.src = '/icons/pencil.png';
+						nameEditButton.onclick = function() {
+							let name = prompt("Введите имя спикера", speakerName);
+							if (!name) return;
+							httpRequest(
+								'api/set_speaker_name', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 	speakerId,
+									name: 	name
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						nameContainer.appendChild(nameEditButton);
+
+					caption.appendChild(nameContainer);
+
+					// Surname:
+
+					let surnameLabel = document.createElement('div');
+					surnameLabel.style.display 	= 'block';
+					surnameLabel.style.width 		= '280px';
+					surnameLabel.style.color 		= '#808080';
+					surnameLabel.style.fontSize 	= '12px';
+					surnameLabel.innerHTML = "Фамилия";
+					caption.appendChild(surnameLabel);
+
+					let surnameContainer = document.createElement('div');
+					surnameContainer.style.display 	= 'block';
+					surnameContainer.style.width 		= '320px';
+					surnameContainer.style.height 		= '24px';
+
+						let surnameTextElement = document.createElement('div');
+						surnameTextElement.style.display 		= 'inline-block';
+						surnameTextElement.style.width 			= '296px';
+						surnameTextElement.style.height 		= '24px';
+						surnameTextElement.style.verticalAlign 	= 'top';
+						surnameTextElement.style.lineHeight 	= '24px';
+						surnameTextElement.style.fontSize 		= '14px';
+						surnameTextElement.innerHTML = speakerSurname;
+						surnameContainer.appendChild(surnameTextElement);
+
+						let surnameEditButton = document.createElement('img');
+						surnameEditButton.className = 'button';
+						surnameEditButton.style.display = 'inline-block';
+						surnameEditButton.style.width 	= '24px';
+						surnameEditButton.style.height 	= '24px';
+						surnameEditButton.src = '/icons/pencil.png';
+						surnameEditButton.onclick = function() {
+							let surname = prompt("Введите фамилию спикера", speakerSurname);
+							if (!surname) return;
+							httpRequest(
+								'api/set_speaker_surname', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 		speakerId,
+									surname: 	surname
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						surnameContainer.appendChild(surnameEditButton);
+
+					caption.appendChild(surnameContainer);
+
+					// Short description:
+
+					let shortDescriptionLabel = document.createElement('div');
+					shortDescriptionLabel.style.display 	= 'block';
+					shortDescriptionLabel.style.width 		= '320px';
+					shortDescriptionLabel.style.color 		= '#808080';
+					shortDescriptionLabel.style.fontSize 	= '12px';
+					shortDescriptionLabel.style.marginTop 	= '8px';
+					shortDescriptionLabel.innerHTML = "Краткое описание";
+					caption.appendChild(shortDescriptionLabel);
+
+					let shortDescriptionContainer = document.createElement('div');
+					shortDescriptionContainer.style.display = 'block';
+					shortDescriptionContainer.style.width 	= '320px';
+
+						let shortDescriptionTextElement = document.createElement('div');
+						shortDescriptionTextElement.style.display 		= 'inline-block';
+						shortDescriptionTextElement.style.width 		= '296px';
+						shortDescriptionTextElement.style.marginTop 	= '4px';
+						shortDescriptionTextElement.style.verticalAlign = 'top';
+						shortDescriptionTextElement.style.fontSize 		= '12px';
+						shortDescriptionTextElement.innerHTML = speakerShortDescription;
+						shortDescriptionContainer.appendChild(shortDescriptionTextElement);
+
+						let shortDescriptionEditButton = document.createElement('img');
+						shortDescriptionEditButton.className 		= 'button';
+						shortDescriptionEditButton.style.display 	= 'inline-block';
+						shortDescriptionEditButton.style.width 		= '24px';
+						shortDescriptionEditButton.style.height 	= '24px';
+						shortDescriptionEditButton.src = '/icons/pencil.png';
+						shortDescriptionEditButton.onclick = function() {
+							let shortDescription = prompt("Введите краткое описание спикера", speakerShortDescription);
+							if (!shortDescription) return;
+							httpRequest(
+								'api/set_speaker_short_description', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 				speakerId,
+									shortDescription: 	shortDescription
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						shortDescriptionContainer.appendChild(shortDescriptionEditButton);
+
+					caption.appendChild(shortDescriptionContainer);
+
+					// Description:
+
+					let descriptionLabel = document.createElement('div');
+					descriptionLabel.style.display 		= 'block';
+					descriptionLabel.style.width 		= '320px';
+					descriptionLabel.style.color 		= '#808080';
+					descriptionLabel.style.fontSize 	= '12px';
+					descriptionLabel.style.marginTop 	= '8px';
+					descriptionLabel.innerHTML = "Описание";
+					caption.appendChild(descriptionLabel);
+
+					let descriptionContainer = document.createElement('div');
+					descriptionContainer.style.display 		= 'block';
+					descriptionContainer.style.width 		= '320px';
+
+						let descriptionTextElement = document.createElement('div');
+						descriptionTextElement.style.display 		= 'inline-block';
+						descriptionTextElement.style.width 			= '296px';
+						descriptionTextElement.style.marginTop 		= '4px';
+						descriptionTextElement.style.verticalAlign 	= 'top';
+						descriptionTextElement.style.fontSize 		= '12px';
+						descriptionTextElement.innerHTML = speakerDescription;
+						descriptionContainer.appendChild(descriptionTextElement);
+
+						let descriptionEditButton = document.createElement('img');
+						descriptionEditButton.className 	= 'button';
+						descriptionEditButton.style.display = 'inline-block';
+						descriptionEditButton.style.width 	= '24px';
+						descriptionEditButton.style.height 	= '24px';
+						descriptionEditButton.src = '/icons/pencil.png';
+						descriptionEditButton.onclick = function() {
+							let description = prompt("Введите описание спикера", speakerDescription);
+							if (!description) return;
+							httpRequest(
+								'api/set_speaker_description', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 			speakerId,
+									description: 	description
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						descriptionContainer.appendChild(descriptionEditButton);
+
+					caption.appendChild(descriptionContainer);
+
+					// Image:
+
+					let imageLabel = document.createElement('div');
+					imageLabel.style.display 	= 'block';
+					imageLabel.style.width 		= '320px';
+					imageLabel.style.color 		= '#808080';
+					imageLabel.style.fontSize 	= '12px';
+					imageLabel.style.marginTop 	= '8px';
+					imageLabel.innerHTML = "Картинка";
+					caption.appendChild(imageLabel);
+
+					let imageContainer = document.createElement('div');
+					imageContainer.style.display 	= 'block';
+					imageContainer.style.width 		= '320px';
+
+						let imageElement = document.createElement('img');
+						imageElement.style.display 		= 'inline-block';
+						imageElement.style.width 			= '288px';
+						imageElement.style.width 			= '288px';
+						imageElement.style.marginTop 		= '4px';
+						imageElement.style.marginRight 	= '8px';
+						imageElement.style.verticalAlign 	= 'top';
+						imageElement.style.fontSize 		= '12px';
+						imageElement.style.background 		= '#808080';
+						if (speakerImageUrl) {
+							imageElement.src = speakerImageUrl;
+						} else {
+							imageElement.src = '/img/placeholder.png';
+						}
+						imageContainer.appendChild(imageElement);
+
+						let imageEditButton = document.createElement('img');
+						imageEditButton.className 		= 'button';
+						imageEditButton.style.display 	= 'inline-block';
+						imageEditButton.style.width 	= '24px';
+						imageEditButton.style.height 	= '24px';
+						imageEditButton.src = '/icons/pencil.png';
+						imageEditButton.onclick = function() {
+							let imageUrl = prompt("Введите URL картинки", speakerImageUrl);
+							if (!imageUrl) return;
+							httpRequest(
+								'api/set_speaker_image_url', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 			speakerId,
+									imageUrl: 	imageUrl
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						imageContainer.appendChild(imageEditButton);
+
+					caption.appendChild(imageContainer);
+
+				document.body.appendChild(caption);
+
+			},
+			function(status) {
+				if (status == 403) resetPassword();
+			}
+		);
+
+	}
+
+);
+
+</script>
+
+</html>

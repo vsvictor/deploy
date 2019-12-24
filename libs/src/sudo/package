@@ -1,0 +1,8 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'bash',
+		'console-user'
+	]
+
+}

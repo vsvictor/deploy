@@ -1,0 +1,12 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		console-exec,
+		bash
+	],
+
+	jarDependencies: [
+		'http://central.maven.org/maven2/com/jcraft/jsch/0.1.54/jsch-0.1.54.jar'
+	]
+
+}

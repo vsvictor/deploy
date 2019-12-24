@@ -1,0 +1,23 @@
+POST <route>/scenario_statistics
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	blocks: [
+		{
+			id: '...',
+            content: '...',
+            ways: [
+            	2,
+            	4,
+            	5,
+            	1
+            ]
+		},
+		...
+	]
+}

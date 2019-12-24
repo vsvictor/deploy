@@ -1,0 +1,30 @@
+/achievements/list
+
+REQUEST: {
+	userId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	achievements: [
+		{
+			type: '...',
+			count: 32
+		},
+		...
+	]
+}
+
+
+/achievements/notify
+
+REQUEST: {
+	userId: '...',
+	type: '...',
+	toStack: true|false, // Optional
+	notificationCategory: '...', // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS
+}

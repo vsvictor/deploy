@@ -1,0 +1,285 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+sourceSets {
+	main {
+		java {
+			srcDir 'libs/src/adminka-images'
+			srcDir 'libs/src/app'
+			srcDir 'libs/src/app-service'
+			srcDir 'libs/src/bash'
+			srcDir 'libs/src/chatbot'
+			srcDir 'libs/src/chatbot-telegram'
+			srcDir 'libs/src/cmd'
+			srcDir 'libs/src/color'
+			srcDir 'libs/src/compiler'
+			srcDir 'libs/src/console'
+			srcDir 'libs/src/console-exec'
+			srcDir 'libs/src/console-system'
+			srcDir 'libs/src/console-user'
+			srcDir 'libs/src/core'
+			srcDir 'libs/src/css-core'
+			srcDir 'libs/src/css-ic'
+			srcDir 'libs/src/csv'
+			srcDir 'libs/src/date'
+			srcDir 'libs/src/email'
+			srcDir 'libs/src/emptiable'
+			srcDir 'libs/src/ephemeral'
+			srcDir 'libs/src/geo'
+			srcDir 'libs/src/geo-address'
+			srcDir 'libs/src/git'
+			srcDir 'libs/src/gradle'
+			srcDir 'libs/src/hash'
+			srcDir 'libs/src/hash-table'
+			srcDir 'libs/src/http'
+			srcDir 'libs/src/http-client'
+			srcDir 'libs/src/http-endpoint-password'
+			srcDir 'libs/src/http-endpoint-protected'
+			srcDir 'libs/src/http-files-upload'
+			srcDir 'libs/src/http-proxy'
+			srcDir 'libs/src/http-server'
+			srcDir 'libs/src/http-storage'
+			srcDir 'libs/src/https-server'
+			srcDir 'libs/src/ic'
+			srcDir 'libs/src/icons-material'
+			srcDir 'libs/src/icotp'
+			srcDir 'libs/src/icotp-client'
+			srcDir 'libs/src/icotp-server'
+			srcDir 'libs/src/javac'
+			srcDir 'libs/src/js-char'
+			srcDir 'libs/src/js-csv'
+			srcDir 'libs/src/js-file-input-button'
+			srcDir 'libs/src/js-http-client'
+			srcDir 'libs/src/js-http-client-password'
+			srcDir 'libs/src/js-import'
+			srcDir 'libs/src/js-local-storage'
+			srcDir 'libs/src/js-name-format'
+			srcDir 'libs/src/js-password-prompt'
+			srcDir 'libs/src/js-popup'
+			srcDir 'libs/src/js-url-params'
+			srcDir 'libs/src/json'
+			srcDir 'libs/src/kotlin'
+			srcDir 'libs/src/kotlinc'
+			srcDir 'libs/src/language'
+			srcDir 'libs/src/log'
+			srcDir 'libs/src/mapper'
+			srcDir 'libs/src/mapper-storage'
+			srcDir 'libs/src/math'
+			srcDir 'libs/src/mime-types'
+			srcDir 'libs/src/model-achievements'
+			srcDir 'libs/src/model-admins'
+			srcDir 'libs/src/model-counter'
+			srcDir 'libs/src/model-coupons'
+			srcDir 'libs/src/model-distribution'
+			srcDir 'libs/src/model-docs-api'
+			srcDir 'libs/src/model-events'
+			srcDir 'libs/src/model-points'
+			srcDir 'libs/src/model-questions'
+			srcDir 'libs/src/model-scenarios'
+			srcDir 'libs/src/model-talks'
+			srcDir 'libs/src/mongodb'
+			srcDir 'libs/src/mongodb-local'
+			srcDir 'libs/src/onboot'
+			srcDir 'libs/src/order'
+			srcDir 'libs/src/ordered-list'
+			srcDir 'libs/src/ordered-set'
+			srcDir 'libs/src/parse'
+			srcDir 'libs/src/pdf'
+			srcDir 'libs/src/polpharma-backend'
+			srcDir 'src'
+			srcDir 'libs/src/polpharma-hrm'
+			srcDir 'libs/src/polpharma-images'
+			srcDir 'libs/src/polpharma-ophtik'
+			srcDir 'libs/src/polpharma-prm'
+			srcDir 'libs/src/random'
+			srcDir 'libs/src/reader'
+			srcDir 'libs/src/redis'
+			srcDir 'libs/src/reflect'
+			srcDir 'libs/src/remover'
+			srcDir 'libs/src/res-text'
+			srcDir 'libs/src/scp'
+			srcDir 'libs/src/serial'
+			srcDir 'libs/src/serial-json'
+			srcDir 'libs/src/serial-stream'
+			srcDir 'libs/src/serial-string-map'
+			srcDir 'libs/src/service-monitor-telegram'
+			srcDir 'libs/src/setter'
+			srcDir 'libs/src/sha'
+			srcDir 'libs/src/socket'
+			srcDir 'libs/src/socket-rr-server'
+			srcDir 'libs/src/socket-server'
+			srcDir 'libs/src/ssh'
+			srcDir 'libs/src/ssl'
+			srcDir 'libs/src/storage'
+			srcDir 'libs/src/storage-binding'
+			srcDir 'libs/src/storage-cache'
+			srcDir 'libs/src/storage-db'
+			srcDir 'libs/src/storage-fs'
+			srcDir 'libs/src/storage-ic'
+			srcDir 'libs/src/storage-json'
+			srcDir 'libs/src/storage-stream'
+			srcDir 'libs/src/storage-string-map'
+			srcDir 'libs/src/submittable'
+			srcDir 'libs/src/sudo'
+			srcDir 'libs/src/system-services'
+			srcDir 'libs/src/test'
+			srcDir 'libs/src/url'
+		}
+	}
+}
+
+sourceCompatibility = '1.10'
+targetCompatibility = '1.10'
+
+buildscript {
+	ext.kotlin_version = '1.3.31'
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	compile fileTree(dir: 'libs/jar/adminka-images', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/app', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/app-service', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/bash', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/chatbot', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/chatbot-telegram', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/cmd', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/color', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/compiler', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/console', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/console-exec', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/console-system', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/console-user', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/core', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/css-core', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/css-ic', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/csv', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/date', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/email', include: '*.jar')
+	compile fileTree(dir: 'libs/src/email/jar', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/emptiable', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/ephemeral', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/geo', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/geo-address', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/git', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/gradle', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/hash', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/hash-table', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-client', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-endpoint-password', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-endpoint-protected', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-files-upload', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-proxy', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-server', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/http-storage', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/https-server', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/ic', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/icons-material', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/icotp', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/icotp-client', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/icotp-server', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/javac', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-char', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-csv', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-file-input-button', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-http-client', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-http-client-password', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-import', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-local-storage', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-name-format', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-password-prompt', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-popup', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/js-url-params', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/json', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/kotlin', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/kotlinc', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/language', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/log', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/mapper', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/mapper-storage', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/math', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/mime-types', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-achievements', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-admins', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-counter', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-coupons', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-distribution', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-docs-api', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-events', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-points', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-questions', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-scenarios', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/model-talks', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/mongodb', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/mongodb-local', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/onboot', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/order', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/ordered-list', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/ordered-set', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/parse', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/pdf', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/polpharma-backend', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/polpharma-db', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/polpharma-hrm', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/polpharma-images', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/polpharma-ophtik', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/polpharma-prm', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/random', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/reader', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/redis', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/reflect', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/remover', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/res-text', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/scp', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/serial', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/serial-json', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/serial-stream', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/serial-string-map', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/service-monitor-telegram', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/setter', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/sha', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/socket', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/socket-rr-server', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/socket-server', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/ssh', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/ssl', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-binding', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-cache', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-db', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-fs', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-ic', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-json', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-stream', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/storage-string-map', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/submittable', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/sudo', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/system-services', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/test', include: '*.jar')
+	compile fileTree(dir: 'libs/jar/url', include: '*.jar')
+}
+
+compileKotlin {
+	kotlinOptions {
+		jvmTarget = "1.8"
+		freeCompilerArgs = ['-Xjvm-default=enable']
+	}
+}
+compileTestKotlin {
+	kotlinOptions {
+		jvmTarget = "1.8"
+		freeCompilerArgs = ['-Xjvm-default=enable']
+	}
+}

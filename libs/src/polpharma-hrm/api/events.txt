@@ -1,0 +1,7 @@
+POST /events/notify
+
+REQUEST: {
+	userId: '...',
+	type: '...',
+	content: '...'
+}

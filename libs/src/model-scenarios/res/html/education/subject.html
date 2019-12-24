@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+	<button onclick="addScenario()">Добавить сценарий</button>
+
+	<div style="height: 8px"></div>
+
+	<div id="items-container"></div>
+
+</body>
+
+<script defer>
+
+var addScenario;
+
+importJs([
+	'js/url-params.js',
+	'js/file-input-button.js',
+	'js/http-client-password.js',
+	'/js/csv-parser.js',
+], function() {
+
+	let titleElement = document.getElementById('title');
+
+	let itemsContainer = document.getElementById('items-container');
+	itemsContainer.style.padding 	= '4px';
+	itemsContainer.style.background = '#E0E0E0';
+
+	let subjectId = getUrlParams().subject_id;
+
+	httpRequestWithPassword(
+		'api/get_subject', 'POST',
+		{
+			id: subjectId
+		},
+		function(response) {
+
+			titleElement.innerHTML = response.title;
+
+			let scenarios = response.scenarios;
+
+			if (!scenarios) return;
+
+			for (let i = 0; i < scenarios.length; i++) { let scenario = scenarios[i];
+
+				let itemElement = document.createElement('div');
+				itemElement.className = 'elevated';
+				itemElement.style.display 		= 'block';
+				itemElement.style.width 		= '428px';
+				itemElement.style.height 		= '24px';
+				itemElement.style.padding 		= '4px'
+				itemElement.style.margin 		= '8px'
+				itemElement.style.background 	= '#FFFFFF';
+
+					let scenarioTextElement = document.createElement('div');
+					scenarioTextElement.style.display 		= 'inline-block';
+					scenarioTextElement.style.width 		= '256px';
+					scenarioTextElement.style.height 		= '24px';
+					scenarioTextElement.style.paddingLeft 	= '4px'
+					scenarioTextElement.style.verticalAlign = 'top';
+					scenarioTextElement.style.lineHeight 	= '24px';
+					scenarioTextElement.style.fontSize 		= '14px';
+					scenarioTextElement.innerHTML = scenario.title;
+					itemElement.appendChild(scenarioTextElement);
+
+					let editButton = document.createElement('img');
+					editButton.className = 'button';
+					editButton.style.display 	= 'inline-block';
+					editButton.style.width 		= '24px';
+					editButton.style.height 	= '24px';
+					editButton.src = '/icons/pencil.png';
+					editButton.title = "Переименовать сценарий";
+					editButton.onclick = function() {
+						let title = prompt("Введите название сценария");
+						if (!title) return;
+						httpRequestWithPassword(
+							'api/set_scenario_title', 'POST',
+							{
+								subjectId: subjectId,
+								scenarioId: scenario.id,
+								title: title
+							},
+							function(response) {
+								location.reload();
+							}
+						);
+					};
+					itemElement.appendChild(editButton);
+
+					let contentButton = document.createElement('img');
+					contentButton.className = 'button';
+					contentButton.style.display 	= 'inline-block';
+					contentButton.style.width 		= '24px';
+					contentButton.style.height 		= '24px';
+					contentButton.src = '/icons/table-of-contents.png';
+					contentButton.title = "Редактировать блоки";
+					contentButton.onclick = function() {
+						location.href = 'scenario?subject_id=' + subjectId + '&scenario_id=' + scenario.id
+					};
+					itemElement.appendChild(contentButton);
+
+					let uploadButton = document.createElement('div');
+					uploadButton.style.display 	= 'inline-block';
+					uploadButton.title = "Загрузить CSV файл с блоками";
+					createFileInputButton(
+						uploadButton,
+						function() {
+							let button = document.createElement('img');
+							button.className 		= 'button';
+							button.style.width 		= '24px';
+							button.style.height 	= '24px';
+							button.src = '/icons/file-upload.png';
+							return button;
+						},
+						'TEXT',
+						function(file) {
+							let blocks = [];
+							let rows = parseCsv(file);
+							for (let i = 1; i < rows.length; i++) {
+								blocks.push({
+									id: 			rows[i][0],
+									type: 			rows[i][1],
+									content: 		rows[i][2],
+									keyboardType: 	rows[i][3],
+									ways: [
+										{
+											blockId: 	rows[i][4],
+											score:		+rows[i][8]
+										}, {
+											blockId: 	rows[i][5],
+											score:		+rows[i][9]
+										}, {
+											blockId: 	rows[i][6],
+											score:		+rows[i][10]
+										}, {
+											blockId: 	rows[i][7],
+											score:		+rows[i][11]
+										}
+									]
+								});
+							}
+							httpRequestWithPassword(
+								'api/upload_scenario', 'POST',
+								{
+									subjectId: 	subjectId,
+									scenarioId: scenario.id,
+									blocks:	 	blocks,
+								},
+								function(response) {
+									if (response.status == 'SUCCESS') 	alert("Готово!");
+									else 								alert("Произошла ошибка");
+								}
+							);
+						}
+					);
+					itemElement.appendChild(uploadButton);
+
+					let rolesButton = document.createElement('img');
+					rolesButton.className = 'button';
+					rolesButton.style.display 	= 'inline-block';
+					rolesButton.style.width 	= '24px';
+					rolesButton.style.height 	= '24px';
+					rolesButton.src = '/icons/account-group.png';
+					rolesButton.title = "Изменить роли";
+					rolesButton.onclick = function() {
+						let rolesString = "";
+						for (let j = 0; j < scenario.roles.length; j++) {
+							if (j != 0) rolesString += ' ';
+							rolesString += scenario.roles[j];
+						}
+						rolesString = prompt("Введите роли (через пробел)", rolesString);
+						if (!rolesString) return;
+						console.log(rolesString);
+						let roles = rolesString.split(' ');
+						httpRequestWithPassword(
+							'api/set_scenario_roles', 'POST',
+							{
+								subjectId: subjectId,
+								scenarioId: scenario.id,
+								roles: roles
+							},
+							function(response) {
+								location.reload();
+							}
+						);
+					};
+					itemElement.appendChild(rolesButton);
+
+					let notifyButton = document.createElement('img');
+					notifyButton.className = 'button';
+					notifyButton.style.display 	= 'inline-block';
+					notifyButton.style.width 	= '24px';
+					notifyButton.style.height 	= '24px';
+					notifyButton.src = '/icons/bell-ring.png';
+					notifyButton.title = "Послать уведомление пользователям";
+					notifyButton.onclick = function() {
+						httpRequestWithPassword(
+							'api/notify_scenario', 'POST',
+							{
+								subjectId: subjectId,
+								scenarioId: scenario.id
+							},
+							function(response) {
+								alert("Готово!");
+							}
+						);
+					};
+					itemElement.appendChild(notifyButton);
+
+					let statisticsButton = document.createElement('img');
+					statisticsButton.className = 'button';
+					statisticsButton.style.display 	= 'inline-block';
+					statisticsButton.style.width 	= '24px';
+					statisticsButton.style.height 	= '24px';
+					statisticsButton.src = '/icons/poll.png';
+					statisticsButton.title = "Выгрузить статистику в CSV";
+					statisticsButton.onclick = function() {
+						location.href = 'api/statistics.csv?subject_id=' + subjectId + '&scenario_id=' + scenario.id;
+					};
+					itemElement.appendChild(statisticsButton);
+
+					let deleteButton = document.createElement('img');
+					deleteButton.className = 'button';
+					deleteButton.style.display 	= 'inline-block';
+					deleteButton.style.width 	= '24px';
+					deleteButton.style.height 	= '24px';
+					deleteButton.src = '/icons/delete-forever.png';
+					deleteButton.title = "Удалить сценарий";
+					deleteButton.onclick = function() {
+						if (!confirm("Удалить сценарий \"" + scenario.title + "\"?")) return;
+						httpRequestWithPassword(
+							'api/delete_scenario', 'POST',
+							{
+								subjectId: subjectId,
+								scenarioId: scenario.id
+							},
+							function(response) {
+								location.reload();
+							}
+						);
+					}
+					itemElement.appendChild(deleteButton);
+
+				itemsContainer.appendChild(itemElement);
+
+			}
+
+		}
+	);
+
+	addScenario = function() {
+
+		let title = prompt("Введите название сценария");
+		if (!title) return;
+
+		httpRequestWithPassword(
+			'api/add_scenario', 'POST',
+			{
+				subjectId: subjectId,
+				title: title
+			},
+			function(response) {
+				location.reload();
+			}
+		);
+
+	};
+
+});
+
+</script>
+
+</html>

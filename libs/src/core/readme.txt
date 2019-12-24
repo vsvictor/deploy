@@ -1,0 +1,1 @@
+Common purpose interfaces, annotations, throwables, collections and util

@@ -1,0 +1,16 @@
+{ class: ic.Package,
+
+	dependencies: [
+		polpharma-backend,
+		app-service,
+		service-monitor-telegram,
+		model-events,
+		model-achievements,
+		model-scenarios,
+		mongodb-local,
+		model-questions
+	],
+
+	main: d2.polpharma.services.hrm.PolpharmaHrmServiceApp
+
+}

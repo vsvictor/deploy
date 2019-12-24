@@ -1,0 +1,43 @@
+{ class: 'ic.Package',
+
+	stores: [
+
+		{ name: 'd2-backend',
+			url: 'https://bitbucket.org/d2-backend'
+		},
+
+		{ name: 'lazy-team',
+			url: 'https://gitlab.com/lazy-team'
+		}
+
+	],
+
+	dependencies: [
+
+		'mapper-storage',
+		'redis',
+		'https-server',
+		'http-storage',
+		'css-ic',
+		'js-url-params',
+		'js-http-client',
+		'js-file-input-button',
+		'js-password-prompt',
+		'icons-material',
+		'http-client',
+		'model-talks',
+		'model-scenarios',
+		'date',
+		'csv',
+		'geo-address',
+		'mongodb-local',
+		'storage-binding',
+		'sha',
+		'app-service',
+		'service-monitor-telegram',
+		polpharma-backend
+	],
+
+	appClass: 'd2.polpharma.services.db.ThisApp',
+
+}

@@ -1,0 +1,8 @@
+{
+	questionsCountByCategory {
+		"<category>": {
+			questionsCount: 43,
+			answeredQuestionsCount: 34
+		}
+	}
+}

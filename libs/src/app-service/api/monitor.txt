@@ -1,0 +1,12 @@
+GET <monitor_host>/api/list
+
+RESPONSE: {
+	status: SUCCESS,
+	services: [
+		{
+			name: '...',
+			host: '...'
+		},
+		...
+	]
+}

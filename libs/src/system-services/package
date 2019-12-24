@@ -1,0 +1,9 @@
+{ class: ic.Package,
+
+	dependencies: [
+		storage-fs,
+		bash,
+		console-system
+	]
+
+}

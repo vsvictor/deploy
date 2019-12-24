@@ -1,0 +1,6 @@
+{
+	userId: '...',
+	questionId: '...',
+	answerText: '...',
+	answerImageUrl: '...' // Optional
+}

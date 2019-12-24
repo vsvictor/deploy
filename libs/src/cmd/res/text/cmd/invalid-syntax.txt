@@ -1,0 +1,2 @@
+	Invalid syntax: "$(actual)"
+	Should be:      "$(correct)"

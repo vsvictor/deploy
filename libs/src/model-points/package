@@ -1,0 +1,10 @@
+{ class: ic.Package,
+
+	dependencies: [
+		model-docs-api,
+		storage,
+		http-endpoint-protected,
+		model-distribution
+	]
+
+}

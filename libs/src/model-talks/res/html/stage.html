@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+</body>
+
+<script defer>
+
+importJs(
+
+	[
+		'/js/url-params.js',
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js'
+	],
+
+	function() {
+
+		let urlParams = getUrlParams();
+
+		let stageId = urlParams['id'];
+
+		httpRequest(
+			'api/get_stage', 'POST',
+			{
+				'Authorization': 'Bearer ' + promptPassword()
+			},
+			{
+				id: stageId,
+			},
+			function(response) {
+
+				let stageName 			= response.name;
+				let stageCoverImageUrl 	= response.coverImageUrl;
+				let stagePlanImageUrl 	= response.planImageUrl;
+
+				document.getElementById('title').innerHTML = stageName;
+
+				let caption = document.createElement('div');
+				caption.className = 'elevated'
+				caption.style.display 		= 'block';
+				caption.style.width 		= '320px';
+				caption.style.padding 		= '8px'
+				caption.style.margin 		= '8px'
+				caption.style.background 	= '#FFFFFF';
+
+					// Name:
+
+					let nameLabel = document.createElement('div');
+					nameLabel.style.display 	= 'block';
+					nameLabel.style.width 		= '280px';
+					nameLabel.style.color 		= '#808080';
+					nameLabel.style.fontSize 	= '12px';
+					nameLabel.innerHTML = "Название";
+					caption.appendChild(nameLabel);
+
+					let nameContainer = document.createElement('div');
+					nameContainer.style.display 	= 'block';
+					nameContainer.style.width 		= '320px';
+					nameContainer.style.height 		= '24px';
+
+						let nameTextElement = document.createElement('div');
+						nameTextElement.style.display 			= 'inline-block';
+						nameTextElement.style.width 			= '296px';
+						nameTextElement.style.height 			= '24px';
+						nameTextElement.style.verticalAlign 	= 'top';
+						nameTextElement.style.lineHeight 		= '24px';
+						nameTextElement.style.fontSize 			= '14px';
+						nameTextElement.innerHTML = stageName;
+						nameContainer.appendChild(nameTextElement);
+
+						let nameEditButton = document.createElement('img');
+						nameEditButton.className = 'button';
+						nameEditButton.style.display 	= 'inline-block';
+						nameEditButton.style.width 		= '24px';
+						nameEditButton.style.height 	= '24px';
+						nameEditButton.src = '/icons/pencil.png';
+						nameEditButton.onclick = function() {
+							let name = prompt("Введите название сцены", stageName);
+							if (!name) return;
+							httpRequest(
+								'api/set_stage_name', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 	stageId,
+									name: 	name
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						nameContainer.appendChild(nameEditButton);
+
+					caption.appendChild(nameContainer);
+
+					// Cover Image:
+
+					let coverImageLabel = document.createElement('div');
+					coverImageLabel.style.display 	= 'block';
+					coverImageLabel.style.width 	= '320px';
+					coverImageLabel.style.color 	= '#808080';
+					coverImageLabel.style.fontSize 	= '12px';
+					coverImageLabel.style.marginTop = '8px';
+					coverImageLabel.innerHTML = "Обложка";
+					caption.appendChild(coverImageLabel);
+
+					let coverImageContainer = document.createElement('div');
+					coverImageContainer.style.display 	= 'block';
+					coverImageContainer.style.width 	= '320px';
+
+						let coverImageElement = document.createElement('img');
+						coverImageElement.style.display 		= 'inline-block';
+						coverImageElement.style.width 			= '288px';
+						coverImageElement.style.width 			= '288px';
+						coverImageElement.style.marginTop 		= '4px';
+						coverImageElement.style.marginRight 	= '8px';
+						coverImageElement.style.verticalAlign 	= 'top';
+						coverImageElement.style.fontSize 		= '12px';
+						coverImageElement.style.background 		= '#808080';
+						if (stageCoverImageUrl) {
+							coverImageElement.src = stageCoverImageUrl;
+						} else {
+							coverImageElement.src = '/img/placeholder.png';
+						}
+						coverImageContainer.appendChild(coverImageElement);
+
+						let coverImageEditButton = document.createElement('img');
+						coverImageEditButton.className 		= 'button';
+						coverImageEditButton.style.display 	= 'inline-block';
+						coverImageEditButton.style.width 	= '24px';
+						coverImageEditButton.style.height 	= '24px';
+						coverImageEditButton.src = '/icons/pencil.png';
+						coverImageEditButton.onclick = function() {
+							let coverImageUrl = prompt("Введите URL картинки", stageCoverImageUrl);
+							if (!coverImageUrl) return;
+							httpRequest(
+								'api/set_stage_cover_image_url', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 			stageId,
+									coverImageUrl: 	coverImageUrl
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						coverImageContainer.appendChild(coverImageEditButton);
+
+					caption.appendChild(coverImageContainer);
+
+					// Plan Image:
+
+					let planImageLabel = document.createElement('div');
+					planImageLabel.style.display 	= 'block';
+					planImageLabel.style.width 		= '320px';
+					planImageLabel.style.color 		= '#808080';
+					planImageLabel.style.fontSize 	= '12px';
+					planImageLabel.style.marginTop 	= '8px';
+					planImageLabel.innerHTML = "План";
+					caption.appendChild(planImageLabel);
+
+					let planImageContainer = document.createElement('div');
+					planImageContainer.style.display 	= 'block';
+					planImageContainer.style.width 		= '320px';
+
+						let planImageElement = document.createElement('img');
+						planImageElement.style.display 			= 'inline-block';
+						planImageElement.style.width 			= '288px';
+						planImageElement.style.width 			= '288px';
+						planImageElement.style.marginTop 		= '4px';
+						planImageElement.style.marginRight 		= '8px';
+						planImageElement.style.verticalAlign 	= 'top';
+						planImageElement.style.fontSize 		= '12px';
+						planImageElement.style.background 		= '#808080';
+						if (stagePlanImageUrl) {
+							planImageElement.src = stagePlanImageUrl;
+						} else {
+							planImageElement.src = '/img/placeholder.png';
+						}
+						planImageContainer.appendChild(planImageElement);
+
+						let planImageEditButton = document.createElement('img');
+						planImageEditButton.className 		= 'button';
+						planImageEditButton.style.display 	= 'inline-block';
+						planImageEditButton.style.width 	= '24px';
+						planImageEditButton.style.height 	= '24px';
+						planImageEditButton.src = '/icons/pencil.png';
+						planImageEditButton.onclick = function() {
+							let planImageUrl = prompt("Введите URL картинки", stagePlanImageUrl);
+							if (!planImageUrl) return;
+							httpRequest(
+								'api/set_stage_plan_image_url', 'POST',
+								{
+									Authorization: 'Bearer ' + promptPassword()
+								},
+								{
+									id: 			stageId,
+									planImageUrl: 	planImageUrl
+								},
+								function(response) {
+									location.reload();
+								},
+								function(status) {
+									if (status == 403) resetPassword();
+								}
+							);
+						};
+						planImageContainer.appendChild(planImageEditButton);
+
+					caption.appendChild(planImageContainer);
+
+				document.body.appendChild(caption);
+
+			},
+			function(status) {
+				if (status == 403) resetPassword();
+			}
+		);
+
+	}
+
+);
+
+</script>
+
+</html>

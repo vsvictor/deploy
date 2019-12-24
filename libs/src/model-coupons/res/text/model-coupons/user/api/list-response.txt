@@ -1,0 +1,14 @@
+{
+	status: SUCCESS,
+	userCoupons: [
+		{
+			id: '...',
+			isUsed: true | false
+			code: '...', 			// Optional
+			imageUrl: '...', 		// Optional
+			codeImageUrl: '...', 	// Optional
+			price: 22 				// Optional
+		},
+		...
+	]
+}

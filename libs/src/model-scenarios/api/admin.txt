@@ -1,0 +1,239 @@
+// Получение тем:
+
+GET <admin_route>/api/get_subjects
+
+RESPONSE: {
+	status: SUCCESS,
+	subjects: [
+		{
+			id: '...',
+			title: "...",
+			roles: [
+				ROLE1,
+				ROLE2,
+				...
+			]
+		},
+		...
+	]
+}
+
+
+// Добавление темы:
+
+POST <admin_route>/api/add_subject
+
+REQUEST: {
+	title: "..."
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Изменение названия темы:
+
+POST <admin_route>/api/set_subject_title
+
+REQUEST: {
+	subjectId: '...',
+	title: "..."
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Изменение ролей темы:
+
+POST <admin_route>/api/set_subject_roles
+
+REQUEST: {
+	subjectId: '...',
+	roles: [
+    	ROLE1,
+    	ROLE2,
+    	...
+    ]
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Удаление темы:
+
+POST <admin_route>/api/delete_subject
+
+REQUEST: {
+	subjectId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Получение конкретной темы с её сценариями
+
+POST <admin_route>/api/get_subject
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS|SUBJECT_NOT_EXISTS,
+	title: "...",
+	scenarios: [
+		{
+			id: '...',
+			title: "...",
+			roles: [
+				ROLE1,
+				ROLE2,
+				...
+			]
+		},
+		...
+	]
+}
+
+
+// Добавление сценария:
+
+POST <admin_route>/api/add_scenario
+
+REQUEST: {
+	subjectId: '...',
+	title: "..."
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Изменение названия сценария:
+
+POST <admin_route>/api/set_scenario_title
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...',
+	title: "..."
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Изменение ролей сценария:
+
+POST <admin_route>/api/set_scenario_roles
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...',
+	roles: [
+    	ROLE1,
+    	ROLE2,
+    	...
+    ]
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Удаление сценария:
+
+POST <admin_route>/api/delete_scenario
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Получение конкретного сценария с его блоками:
+
+POST <admin_route>/api/get_scenario
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	blocks: [
+		{
+			id: '...',
+			type: '...',
+			content: '...',
+			keyboardType: '...',
+			ways: [
+				{
+					blockId: '...',
+					score: 56
+				},
+				...
+			]
+		},
+		...
+	]
+}
+
+
+// Загрузка блоков в сценарий:
+
+POST <admin_route>/api/upload_scenario
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...',
+	blocks: [
+    	{
+    		id: '...',
+    		type: '...',
+    		content: '...',
+    		keyboardType: '...',
+    		ways: [
+    			{
+    				blockId: '...',
+    				score: 56
+    			},
+    			...
+    		]
+    	},
+    	...
+    ]
+}
+
+RESPONSE: {
+	status: SUCCESS|SCENARIO_NOT_FOUND|EMPTY_SCENARIO
+}
+
+
+// Уведомление пользователей о сценарии:
+
+POST <admin_route>/api/notify_scenario
+
+REQUEST: {
+	subjectId: '...',
+	scenarioId: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS
+}

@@ -1,0 +1,34 @@
+body {
+	position: relative;
+}
+
+div {
+	position: relative;
+}
+
+button {
+	cursor: pointer;
+}
+
+.button {
+	cursor: pointer;
+}
+
+.hidden {
+	display: none;
+}
+
+.invisible {
+	opacity: 0;
+}
+
+.centered {
+	position: 	absolute;
+    left: 		50%;
+    top: 		50%;
+    transform: 	translate(-50%, -50%);
+}
+
+.elevated {
+	box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}

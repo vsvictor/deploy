@@ -1,0 +1,21 @@
+{ class: ic.Package, version: 'Alpha 0.4.2',
+
+	dependencies: [
+		app,
+		git,
+		storage-json,
+		http-client,
+		javac,
+		kotlinc,
+		cmd,
+		res-text,
+		gradle,
+		scp,
+		test,
+		storage-ic,
+		url
+	],
+
+	main: ic.apps.ic.IcApp
+
+}

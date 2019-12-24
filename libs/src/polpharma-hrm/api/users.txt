@@ -1,0 +1,93 @@
+POST /user/create
+
+REQUEST: {
+	role: '...',
+	isAdmin: true|false, // Optional
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	birthDate: 23456, // Millis, Optional
+	city: '...', // Optional
+	line: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	id: '...'
+}
+
+
+POST /user/get
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	role: '...',
+	isAdmin: true|false,
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	birthDate: 23456, // Millis, Optional
+	city: '...', // Optional
+	line: '...', // Optional
+	registrationDate: 23456, // Millis
+}
+
+
+POST /user/modify
+
+REQUEST: {
+	id: '...',
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	birthDate: 23456, // Millis, Optional
+	city: '...', // Optional
+	line: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+POST /user/list
+
+REQUEST: {
+	role: '...', // Optional
+	isAdmin: true|false, // Optional
+	phone: '...', // Optional
+	surname: '...', // Optional
+	name: '...', // Optional
+	city: '...', // Optional
+	line: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	users: [
+    	{
+    		role: '...',
+            isAdmin: true|false,
+            phone: '...', // Optional
+            surname: '...', // Optional
+            name: '...', // Optional
+            birthDate: 23456, // Millis, Optional
+            city: '...', // Optional
+            line: '...', // Optional
+            registrationDate: 23456, // Millis
+    	},
+    	...
+    ]
+}
+
+
+GET /user/count
+
+RESPONSE: {
+	status: SUCCESS
+	usersCount: 246
+}

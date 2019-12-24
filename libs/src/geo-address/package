@@ -1,0 +1,10 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'geo',
+		'http-client',
+		'language',
+		'json'
+	]
+
+}

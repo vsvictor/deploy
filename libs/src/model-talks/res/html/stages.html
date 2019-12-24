@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+	<button onclick="addStage()">ДОБАВИТЬ СЦЕНУ</button>
+
+	<div style="height: 8px"></div>
+
+	<div id="items-container"></div>
+
+</body>
+
+<script defer>
+
+var addStage;
+
+importJs(
+
+	[
+		'/js/url-params.js',
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js'
+	],
+
+	function() {
+
+		let urlParams = getUrlParams();
+
+		let itemsContainer = document.getElementById('items-container');
+		itemsContainer.style.padding 	= '4px';
+		itemsContainer.style.background = '#E0E0E0';
+
+		httpRequest(
+			'api/get_stages', 'POST',
+			{
+				'Authorization': 'Bearer ' + promptPassword()
+			},
+			{
+				talkEventId: urlParams['talk_event_id']
+			},
+			function(response) {
+
+				let stages = response.stages;
+
+				for (let i = 0; i < stages.length; i++) { let stage = stages[i];
+
+					let itemElement = document.createElement('div');
+
+					itemElement.className = 'elevated button';
+					itemElement.style.display 		= 'block';
+					itemElement.style.width 		= '256px';
+					itemElement.style.height 		= '24px';
+					itemElement.style.padding 		= '4px'
+					itemElement.style.margin 		= '8px'
+					itemElement.style.background 	= '#FFFFFF';
+
+						let nameTextElement = document.createElement('div');
+						nameTextElement.style.display 		= 'inline-block';
+						nameTextElement.style.width 		= '256px';
+						nameTextElement.style.height 		= '24px';
+						nameTextElement.style.paddingLeft 	= '4px'
+						nameTextElement.style.verticalAlign = 'top';
+						nameTextElement.style.lineHeight 	= '24px';
+						nameTextElement.style.fontSize 	= '14px';
+						nameTextElement.innerHTML = stage.name;
+						itemElement.appendChild(nameTextElement);
+
+					itemElement.onclick = function() {
+						location.href = 'stage?id=' + stage.id
+					}
+
+					itemsContainer.appendChild(itemElement);
+
+				}
+
+			},
+			function(status) {
+				if (status == 403) resetPassword();
+			}
+		);
+
+		addStage = function() {
+
+			let name = prompt("Введите название сцены");
+			if (!name) return;
+
+			httpRequest(
+				'api/add_stage', 'POST',
+				{
+					Authorization: 'Bearer ' + promptPassword()
+				},
+				{
+					name: name
+				},
+				function(response) {
+					httpRequest(
+						'api/add_stage_to_talk_event', 'POST',
+						{
+							'Authorization': 'Bearer ' + promptPassword()
+						},
+						{
+							talkEventId: urlParams['talk_event_id'],
+							stageId: response.id
+						},
+						function(response) {
+							location.reload();
+						},
+						function(status) {
+							if (status == 403) resetPassword();
+						}
+					);
+				},
+				function(status) {
+					if (status == 403) resetPassword();
+				}
+			);
+
+		};
+
+	}
+
+);
+
+</script>
+
+</html>

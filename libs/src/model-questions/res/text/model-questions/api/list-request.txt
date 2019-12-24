@@ -1,0 +1,5 @@
+{
+	askerId: '...', // Optional
+	category: '...', // Optional
+	answererId: '...' // Optional
+}

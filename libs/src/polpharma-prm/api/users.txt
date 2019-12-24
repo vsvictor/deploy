@@ -1,0 +1,84 @@
+// Для Quadrasoft: Загрузка пользователей
+
+POST <host>/users/quadrasoft-update
+
+REQUEST: {
+	users: [
+		{
+			id: '...',			// Quadrasoft user id
+			month: 11,
+			line: '...', 		// Optional
+			category: '...', 	// Optional
+			points: 5667 		// Points since last request
+		},
+		...
+	]
+}
+
+RESPONSE: {
+	status: SUCCESS
+}
+
+
+// Получить коды для регистрации в CSV
+
+GET <host>/users/get-registration-codes.csv
+
+
+// Регистрация пользователя
+
+POST <host>/users/register
+
+REQUEST: {
+	registrationCode: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | REGISTRATION_CODE_NOT_EXISTS,
+	userId: '...'
+}
+
+
+// Получение пользователя
+
+POST <host>/users/get
+
+REQUEST: {
+	id: '...',
+	email: '...' // Optional
+    points: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// Modify user:
+
+POST <host>/users/modify
+
+REQUEST: {
+	id: '...',
+	email: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// Получение пользователя
+
+GET <host>/users/list
+
+RESPONSE: {
+	status: SUCCESS
+	users: [
+		{
+			id: '...',
+         	email: '...', // Optional
+         	points: '...'
+		}
+	]
+}

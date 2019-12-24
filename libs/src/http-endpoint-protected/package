@@ -1,0 +1,7 @@
+{ class: ic.Package,
+
+	dependencies: [
+		http-server
+	]
+
+}

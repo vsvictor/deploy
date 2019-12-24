@@ -1,0 +1,28 @@
+{ class: ic.Package,
+
+	stores: [
+
+		{ name: lazy-team,
+        	url: 'https://gitlab.com/lazy-team'
+        }
+
+	],
+
+	dependencies: [
+		http-server,
+		storage-binding,
+		mapper-storage,
+		http-storage,
+		csv,
+		js-http-client-password,
+		js-name-format,
+		http-endpoint-protected,
+		css-ic,
+		css-ic,
+		icons-material,
+		js-url-params,
+		js-csv,
+		js-file-input-button
+	]
+
+}

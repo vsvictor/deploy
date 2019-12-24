@@ -1,0 +1,14 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'http-storage',
+		'css-ic',
+		'js-import',
+		'js-http-client-password',
+		'js-file-input-button',
+		'icons-material',
+		'http-endpoint-password',
+		'js-name-format'
+	]
+
+}

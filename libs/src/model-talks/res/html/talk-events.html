@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+	<button onclick="addTalkEvent()">ДОБАВИТЬ МЕРОПРИЯТИЕ</button>
+
+	<div style="height: 8px"></div>
+
+	<div id="items-container"></div>
+
+</body>
+
+<script defer>
+
+var addTalkEvent;
+
+importJs(
+
+	[
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js'
+	],
+
+	function() {
+
+		let itemsContainer = document.getElementById('items-container');
+		itemsContainer.style.padding 	= '4px';
+		itemsContainer.style.background = '#E0E0E0';
+
+		httpRequest(
+			'api/get_talk_events', 'GET',
+			{
+				'Authorization': 'Bearer ' + promptPassword()
+			},
+			null,
+			function(response) {
+
+				let talkEvents = response.talkEvents;
+
+				for (let i = 0; i < talkEvents.length; i++) { let talkEvent = talkEvents[i];
+
+					let itemElement = document.createElement('div');
+					itemElement.className = 'elevated button';
+					itemElement.style.display 		= 'block';
+					itemElement.style.width 		= '256px';
+					itemElement.style.height 		= '24px';
+					itemElement.style.padding 		= '4px'
+					itemElement.style.margin 		= '8px'
+					itemElement.style.background 	= '#FFFFFF';
+
+						let titleTextElement = document.createElement('div');
+						titleTextElement.style.display 		= 'inline-block';
+						titleTextElement.style.width 		= '256px';
+						titleTextElement.style.height 		= '24px';
+						titleTextElement.style.paddingLeft 	= '4px'
+						titleTextElement.style.verticalAlign = 'top';
+						titleTextElement.style.lineHeight 	= '24px';
+						titleTextElement.style.fontSize 	= '14px';
+						titleTextElement.innerHTML = talkEvent.title;
+						itemElement.appendChild(titleTextElement);
+
+					itemElement.onclick = function() {
+						location.href = 'talk-event?id=' + talkEvent.id
+					}
+
+					itemsContainer.appendChild(itemElement);
+
+				}
+
+			},
+			function(status) {
+				if (status == 403) resetPassword();
+			}
+		);
+
+		addTalkEvent = function() {
+
+			let title = prompt("Введите название мероприятия");
+			if (!title) return;
+
+			httpRequest(
+				'api/add_talk_event', 'POST',
+				{
+					Authorization: 'Bearer ' + promptPassword()
+				},
+				{
+					title: title
+				},
+				function(response) {
+					location.reload();
+				},
+				function(status) {
+					if (status == 403) resetPassword();
+				}
+			);
+
+		};
+
+	}
+
+);
+
+</script>
+
+</html>

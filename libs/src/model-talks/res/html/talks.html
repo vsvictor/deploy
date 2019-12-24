@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title id="title">Loading...</title>
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+	<button onclick="addTalk()">ДОБАВИТЬ ВЫСТУПЛЕНИЕ</button>
+
+	<div style="height: 8px"></div>
+
+	<div id="items-container"></div>
+
+</body>
+
+<script defer>
+
+var addTalk;
+
+importJs(
+
+	[
+		'/js/url-params.js',
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js'
+	],
+
+	function() {
+
+		let urlParams = getUrlParams();
+
+		let talkEventId = urlParams['talk_event_id'];
+
+		let itemsContainer = document.getElementById('items-container');
+		itemsContainer.style.padding 	= '4px';
+		itemsContainer.style.background = '#E0E0E0';
+
+		httpRequest(
+			'api/get_talks', 'POST',
+			{
+				'Authorization': 'Bearer ' + promptPassword()
+			},
+			{
+				talkEventId: talkEventId
+			},
+			function(response) {
+
+				let talks = response.talks;
+
+				for (let i = 0; i < talks.length; i++) { let talk = talks[i];
+
+					let itemElement = document.createElement('div');
+
+					itemElement.className = 'elevated button';
+					itemElement.style.display 		= 'block';
+					itemElement.style.width 		= '256px';
+					itemElement.style.height 		= '24px';
+					itemElement.style.padding 		= '4px'
+					itemElement.style.margin 		= '8px'
+					itemElement.style.background 	= '#FFFFFF';
+
+						let nameTextElement = document.createElement('div');
+						nameTextElement.style.display 		= 'inline-block';
+						nameTextElement.style.width 		= '256px';
+						nameTextElement.style.height 		= '24px';
+						nameTextElement.style.paddingLeft 	= '4px'
+						nameTextElement.style.verticalAlign = 'top';
+						nameTextElement.style.lineHeight 	= '24px';
+						nameTextElement.style.fontSize 	= '14px';
+						nameTextElement.innerHTML = talk.name;
+						itemElement.appendChild(nameTextElement);
+
+					itemElement.onclick = function() {
+						location.href = 'talk?id=' + talk.id + '&talk_event_id=' + talkEventId;
+					}
+
+					itemsContainer.appendChild(itemElement);
+
+				}
+
+			},
+			function(status) {
+				if (status == 403) resetPassword();
+			}
+		);
+
+		addTalk = function() {
+
+			let type = prompt("Введите тип выступления");
+			if (!type) return;
+
+			httpRequest(
+				'api/add_talk', 'POST',
+				{
+					Authorization: 'Bearer ' + promptPassword()
+				},
+				{
+					type: type
+				},
+				function(response) {
+					httpRequest(
+						'api/add_talk_to_talk_event', 'POST',
+						{
+							'Authorization': 'Bearer ' + promptPassword()
+						},
+						{
+							talkEventId: 	talkEventId,
+							talkId: 		response.id
+						},
+						function(response) {
+							location.reload();
+						},
+						function(status) {
+							if (status == 403) resetPassword();
+						}
+					);
+				},
+				function(status) {
+					if (status == 403) resetPassword();
+				}
+			);
+
+		};
+
+	}
+
+);
+
+</script>
+
+</html>

@@ -1,0 +1,16 @@
+{ class: ic.Package,
+
+	dependencies: [
+		storage,
+		serial-json,
+		socket,
+		storage-db
+	],
+
+	jarDependencies: [
+		'http://central.maven.org/maven2/org/mongodb/mongodb-driver-sync/3.10.1/mongodb-driver-sync-3.10.1.jar',
+		'http://central.maven.org/maven2/org/mongodb/mongodb-driver-core/3.10.1/mongodb-driver-core-3.10.1.jar',
+		'http://central.maven.org/maven2/org/mongodb/bson/3.10.1/bson-3.10.1.jar'
+	]
+
+}

@@ -1,0 +1,8 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'http-server',
+		'storage-stream'
+	]
+
+}

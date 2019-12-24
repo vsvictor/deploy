@@ -1,0 +1,11 @@
+{ class: ic.Package,
+
+	dependencies: [
+		model-docs-api,
+		storage-binding,
+		http-endpoint-protected,
+		res-text,
+		mapper-storage
+	]
+
+}

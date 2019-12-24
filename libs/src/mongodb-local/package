@@ -1,0 +1,9 @@
+{ class: ic.Package,
+
+	dependencies: [
+		mongodb,
+		storage-ic,
+		console-system
+	]
+
+}

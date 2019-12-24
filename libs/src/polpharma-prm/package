@@ -1,0 +1,27 @@
+{ class: ic.Package,
+
+	dependencies: [
+		app-service,
+		mongodb-local,
+		http-endpoint-protected,
+		polpharma-backend,
+		https-server,
+		service-monitor-telegram,
+		mapper-storage,
+		storage-binding,
+		csv,
+		model-scenarios,
+		model-events,
+		model-coupons,
+		model-points,
+		email,
+		model-admins,
+		date,
+		pdf,
+		model-distribution,
+		http-proxy
+	],
+
+	main: d2.polpharma.services.prm.PolpharmaPrmServiceApp
+
+}

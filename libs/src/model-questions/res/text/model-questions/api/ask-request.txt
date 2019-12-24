@@ -1,0 +1,7 @@
+{
+	userId: '...',
+	questionText: '...',
+	questionImageUrl: '...',	// Optional
+	category: '...', 			// Optional
+	answererId: '...' 			// Optional
+}

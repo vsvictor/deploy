@@ -1,0 +1,17 @@
+{ class: 'ic.Package',
+
+    dependencies: [
+    	'https-server',
+    	'adminka-images',
+    	'color',
+    	'math',
+    	'app-service',
+        'service-monitor-telegram',
+        http-files-upload
+    ],
+
+    appClass: 'd2.polpharma.services.images.ThisApp',
+
+    toAutoStart: true
+
+}

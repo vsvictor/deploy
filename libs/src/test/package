@@ -1,0 +1,10 @@
+{ class: ic.Package,
+
+	dependencies: [
+		app,
+		console-user
+	],
+
+	testClass: ic.core.test.CoreTests
+
+}

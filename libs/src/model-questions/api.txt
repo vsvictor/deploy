@@ -1,0 +1,29 @@
+POST <route>/ask
+
+REQUEST: {
+	userId: '...',
+	questionText: '...',
+	questionImageUrl: '...',	// Optional
+	category: '...', 			// Optional
+	answererId: '...' 			// Optional
+}
+
+RESPONSE: {
+	status: 'SUCCESS',
+	questionId: '...'
+}
+
+
+POST <route>/answer
+
+REQUEST: {
+	userId: '...',
+	questionId: '...',
+	answerText: '...',
+	answerImageUrl: '...' // Optional
+}
+
+{
+	status: SUCCESS | ALREADY_ANSWERED | NO_RIGHTS_TO_ANSWER,
+	questionId: '...'
+}

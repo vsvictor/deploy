@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Polpharma DB Admin Console</title>
+</head>
+
+<link rel="stylesheet" type="text/css" href="/css/core.css">
+<link rel="stylesheet" type="text/css" href="/css/ic.css">
+
+<script src="/js/import.js"></script>
+
+<body>
+
+</body>
+
+<script defer>
+
+importJs(
+
+	[
+		'/js/file-input-button.js',
+		'/js/http-client.js',
+		'/js/password-prompt.js'
+	],
+
+	function() {
+
+		createFileInputButton(
+			document.body,
+			function() {
+				let button = document.createElement('button');
+				button.innerHTML = 'ЗАГРУЗИТЬ CSV'
+				return button;
+			},
+			'BINARY',
+			function(file) {
+				httpRequest(
+					'/admin/pharm/upload_pharmacies', 'POST',
+					{
+						'Authorization': 'Bearer ' + promptPassword()
+					},
+					file,
+					function(response) {
+						alert("Готово!");
+					},
+					function(status) {
+						if (status == 403) resetPassword();
+					}
+				);
+			}
+		);
+
+	}
+
+);
+
+</script>
+
+</html>

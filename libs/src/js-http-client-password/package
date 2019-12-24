@@ -1,0 +1,8 @@
+{ class: 'ic.Package',
+
+	dependencies: [
+		'js-http-client',
+		'js-password-prompt'
+	]
+
+}

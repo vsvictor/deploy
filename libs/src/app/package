@@ -1,0 +1,9 @@
+{ class: ic.Package,
+
+	dependencies: [
+		core,
+		storage-fs,
+		storage-json
+	]
+
+}

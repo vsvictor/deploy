@@ -1,0 +1,16 @@
+{
+    "jarPath": "libs/jar",
+    "customSrcPaths": {"polpharma-db": "src"},
+    "srcPath": "libs/src",
+    "projectType": "GRADLE",
+    "portable": true,
+    "storesPath": ".ic/stores",
+    "binPath": "bin",
+    "srcGroupByStore": false,
+    "tier": "prod",
+    "launchPath": "launch",
+    "packagesPath": ".ic/packages",
+    "buildOnUpdate": false,
+    "class": "ic.Distribution",
+    "tmpPath": ".ic/tmp"
+}

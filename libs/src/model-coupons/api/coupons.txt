@@ -1,0 +1,86 @@
+// Coupons
+
+
+// List coupons:
+
+GET | POST <route>/list
+
+REQUEST: { // Optional
+	categoryId: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	coupons: [
+		{
+			id: '...',
+			categoryId: '...',		// Optional
+			code: '...', 			// Optional
+			codeImageUrl: '...', 	// Optional
+			addedCount: 23
+		},
+		...
+	]
+}
+
+
+// Create coupon:
+
+POST <route>/create
+
+REQUEST: {
+	categoryId: '...',	// Optional
+	code: '...', 		// Optional
+	codeImageUrl: '...' // Optional
+}
+
+RESPONSE: {
+	status: SUCCESS,
+	id: '...'
+}
+
+
+// Get coupon:
+
+POST <route>/get
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	categoryId: '...',	// Optional
+	code: '...', 		// Optional
+	codeImageUrl: '...' // Optional
+	addedCount: 23
+}
+
+
+// Modify coupon:
+
+POST <route>/modify
+
+REQUEST: {
+	id: '...',
+	categoryId: '...',	// Optional
+	code: '...', 		// Optional
+	codeImageUrl: '...' // Optional
+	price: 22			// Optional
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}
+
+
+// Delete coupon:
+
+POST <route>/delete
+
+REQUEST: {
+	id: '...'
+}
+
+RESPONSE: {
+	status: SUCCESS | NOT_EXISTS
+}

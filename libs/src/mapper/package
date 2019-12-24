@@ -1,0 +1,10 @@
+{ class: ic.Package,
+
+	dependencies: [
+		serial-stream,
+		serial-string-map,
+		serial-json,
+		ephemeral
+	]
+
+}

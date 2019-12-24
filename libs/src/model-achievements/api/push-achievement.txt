@@ -1,0 +1,11 @@
+POST <route>/push
+
+REQUEST: {
+	userId: '...',
+	achievementName: '...',
+	toStack: true | false
+}
+
+RESPONSE: {
+	status: SUCCESS | ALREADY_EXISTS
+}
