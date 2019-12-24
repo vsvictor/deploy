@@ -161,7 +161,7 @@ public class RedisStorage extends StringMapStorage {
 
 	private static final Jedis createJedis(final String host, final String password) {
 		final Jedis jedis = new Jedis(host);
-		//jedis.auth(password);
+		jedis.auth(password);
 		return jedis;
 	}
 
