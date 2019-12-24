@@ -66,6 +66,7 @@ public class GetPharmaciesByLocationApiMethod extends ProtectedApiMethod {
 						count
 				),
 				pharmacy -> {
+					if(pharmacy == null) throw new NullPointerException();
 					final JSONObject pharmacyJson = new JSONObject();
 					pharmacyJson.put("id", pharmaciesMapper.getId(pharmacy));
 					pharmacyJson.put("region", 	pharmacy.region);

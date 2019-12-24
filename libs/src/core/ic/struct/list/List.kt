@@ -192,10 +192,10 @@ interface List<Item> : Collection<Item>, Sequence<Item> {
 			array = FilterCollection(items) { it !is Skip }.toArray()
 		}
 		constructor(items: Collection<Item>, count: Int) {
-			val array = arrayOfNulls<Any?>(count)
+			val array = arrayOfNulls<Any?>(Math.min(count, items.count))
 			var i = 0
 			items.doForEach {
-				if (i >= count)  throw Break()
+				if (i >= array.size) throw Break()
 				array[i++] = it
 			}
 			this.array = array
