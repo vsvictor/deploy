@@ -36,15 +36,25 @@ public class UploadPharmaciesCsvApiMethod extends ProtectedApiMethod {
 		csv.forEach((Action2<List<String>, Integer>) (row, rowIndex) -> {
 
 			if (rowIndex == 0) return;
+			Pharmacy ph;
+			try {
+				ph = new Pharmacy(
+						row.get(0),
+						row.get(1),
+						row.get(4),
+						row.get(3),
+						Double.parseDouble(row.get(5)),
+						Double.parseDouble(row.get(6))
+				);
+			}catch (NumberFormatException ex){
+				ph = new Pharmacy(
+						row.get(0),
+						row.get(1),
+						row.get(4),
+						row.get(3));
+			}
 
-			pharmaciesMapper.getId(new Pharmacy(
-				row.get(0),
-				row.get(1),
-				row.get(4),
-				row.get(3),
-				Double.parseDouble(row.get(5)),
-				Double.parseDouble(row.get(6))
-			));
+			pharmaciesMapper.getId(ph);
 
 		});
 
